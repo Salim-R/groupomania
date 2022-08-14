@@ -1,6 +1,8 @@
 #   Groupomania x one piece 
 
-Créer d'abord un dossier p7 dans lequel vous créerez un dossier backend contenant la totalité des fichiers hormis le readme.md et le dossier frontend, puis a l'aide de npm install installer les dépendances du dossier front et du dossier back cd frontend / cd backend depuis le p7
+Créer d'abord un dossier p7 dans lequel vous créerez un dossier backend contenant la totalité des fichiers hormis le readme.md et le dossier frontend, puis a l'aide de npm install installer les dépendances du dossier front et du dossier back cd frontend / cd backend depuis le p7.
+
+Ensuite il va falloir importer les .json users et posts sur mongo grace mongo atlas vous pourrez ensuite acceder au differentes données du site.
 ## config :
 
 -   Mettez vos informations de cluster dans  `/config/db.js`
