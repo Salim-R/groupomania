@@ -1,6 +1,6 @@
 #   Groupomania x one piece 
 
-créer d'abord un dossier p7 dans lequel vous mettrez un dossier backend contenant la totalité des fichiers hormis le readme.md et le frontend qui se trouve dans le backend puis a l'aide de npm install installer les dépendances du dossier front et du dossier back cd frontend / cd backend depuis le p7
+Créer d'abord un dossier p7 dans lequel vous créerez un dossier backend contenant la totalité des fichiers hormis le readme.md et le dossier frontend, puis a l'aide de npm install installer les dépendances du dossier front et du dossier back cd frontend / cd backend depuis le p7
 ## config :
 
 -   Mettez vos informations de cluster dans  `/config/db.js`
