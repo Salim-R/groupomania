@@ -38,7 +38,7 @@ const LikeButton = ({ post }) => {
             {Uid && liked === false && (
                 <img src="./img/icons/heart.svg" onClick={like} alt="like" />
             )}
-            {Uid && liked && (
+            {Uid && liked === true && (
                 <img src="./img/icons/heart-filled.svg" onClick={unlike} alt="unlike" />
             )}
             <span>{post.likers.length}</span>

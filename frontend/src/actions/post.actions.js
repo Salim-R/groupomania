@@ -22,11 +22,11 @@ export const GET_POST_ERRORS = 'GET_POST_ERRORS';
 
 export const getPosts = (num) => {
     return (dispatch) => {
-        return axios
+        return axios // allez chercher les info de l'utilisateur
             .get(`${process.env.REACT_APP_API_URL}api/post/`)
-            .then((res) => {
+            .then((res) => {  // resultat qui part au reducer
                 const array = res.data.slice(0, num);
-                dispatch({ type: GET_POSTS, payload: array });
+                dispatch({ type: GET_POSTS, payload: array }); // payload = ce qu'on envoie 
                 dispatch({ type: GET_ALL_POSTS, payload: res.data });
             })
             .catch((err) => console.log(err));
@@ -47,6 +47,7 @@ export const addPost = (data) => {
     };
 };
 export const likePost = (postId, userId) => {
+    console.log(userId);
     return (dispatch) => {
         return axios({
             method: "patch",

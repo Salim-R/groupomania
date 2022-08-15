@@ -11,9 +11,9 @@ import {
 const initialState = {};
 
 export default function postReducer(state = initialState, action) {
-    switch (action.type) {
+    switch (action.type) {  //quel est le type d'action 
         case GET_POSTS:
-            return action.payload;
+            return action.payload; // récuperer les données dans l'initialstate si il y a de la data
         case LIKE_POST:
             return state.map((post) => {
                 if (post._id === action.payload.postId) {

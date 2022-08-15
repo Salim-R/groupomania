@@ -1,3 +1,4 @@
+/* eslint-disable no-mixed-operators */
 import React, { useContext, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteComment, editComment } from "../../actions/post.actions";
@@ -24,12 +25,12 @@ const EditDeleteComment = ({ comment, postId }) => {
 
     useEffect(() => {
         const checkAuthor = () => {
-            if (Uid === comment.commenterId || userData.isAdmin === true) {
+            if (userData.isAdmin === true || Uid === comment.commenterId) {
                 setIsAuthor(true);
             }
         };
         checkAuthor();
-    }, [Uid, comment.commenterId]);
+    }, [Uid, comment.commenterId, userData.isAdmin]);
 
     return (
         <div className="edit-comment">
@@ -38,7 +39,7 @@ const EditDeleteComment = ({ comment, postId }) => {
                     <img src="./img/icons/edit.svg" alt="edit-comment" />
                 </span>
             )}
-            {isAuthor && edit && userData.isAdmin && (
+            {isAuthor && edit && (
                 <form action="" onSubmit={handleEdit} className="edit-comment-form">
                     <label htmlFor="text" onClick={() => setEdit(!edit)}>
                         Editer

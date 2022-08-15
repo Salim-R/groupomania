@@ -1,3 +1,4 @@
+
 import { GET_TRENDS } from "../actions/post.actions";
 
 const initialState = {};
