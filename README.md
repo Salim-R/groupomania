@@ -1,8 +1,9 @@
 #   Groupomania x one piece 
 
-- Créer d'abord un dossier p7 dans lequel vous créerez un dossier backend contenant la totalité des fichiers hormis le readme.md et le dossier frontend.
-- Puis a l'aide de npm i installer les dépendances du dossier front et du dossier back: 
+- renommer le dossier "groupomania" par "p7" dans lequel vous créerez d'abord un dossier backend où vous placerez la totalité des fichiers/dossiers hormis le fichier "readme.md" et le dossier "frontend".
+- Puis a l'aide de "npm i" installer les dépendances du dossier front et du dossier back: 
  - cd frontend / cd backend depuis le p7.
+ 
 
 Ensuite il va falloir importer les .json users et posts sur mongo grace à mongo atlas vous pourrez ensuite acceder au differentes données du site:
 - Vous devriez normalement avoir post avec deux sous-partie users et posts
