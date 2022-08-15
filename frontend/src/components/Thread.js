@@ -1,36 +1,38 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getPosts } from '../actions/post.actions';
-import Card from './Post/Card';
+import { getPosts } from "../actions/post.actions";
+import Card from "./Post/Card";
 import { isEmpty } from "./Utils";
+
 const Thread = () => {
-    const [loadPost, setLoadPost] = useState(true);
+    const [loadPost, setLoadPost] = useState(true); //si jamais l'autre post et sur true tu me l'affiche pour pas qu'il pop 2fois
     const [count, setCount] = useState(5);
-    const dispatch = useDispatch();
-    const posts = useSelector((state) => state.postReducer)
+    const dispatch = useDispatch(); //envoyer une action
+    const posts = useSelector((state) => state.postReducer); // récuper les donées d'un store
 
     const loadMore = () => {
-        // javascript pour determiner le bas de la page
         if (window.innerHeight + document.documentElement.scrollTop + 1 > document.scrollingElement.scrollHeight) {
-            setLoadPost(true)
+            setLoadPost(true);
         }
     }
+
     useEffect(() => {
         if (loadPost) {
             dispatch(getPosts(count));
-            setLoadPost(false);
+            setLoadPost(false);// pour ne plus relancer l'action 
             setCount(count + 5);
         }
-        //evenement pour le scroll infinie
+
         window.addEventListener('scroll', loadMore);
         return () => window.removeEventListener('scroll', loadMore);
-    }, [loadPost, dispatch, count])
+    }, [loadPost, dispatch, count]); // a chaque fois que quelque chose évolue
+
     return (
         <div className="thread-container">
             <ul>
-                {!isEmpty(posts[0]) &&
+                {!isEmpty(posts[0]) && // si post est true affiche moi la suite
                     posts.map((post) => {
-                        return <Card post={post} key={post._id} />
+                        return <Card post={post} key={post._id} />; //map tt les posts jusq'a qu'il n'y est plus d'id
                     })}
             </ul>
         </div>

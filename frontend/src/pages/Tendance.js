@@ -7,6 +7,7 @@ import Card from "../components/Post/Card";
 import Trends from "../components/Trends";
 import FriendsHint from "../components/Profil/FriendsHint";
 
+
 const Tendance = () => {
     const Uid = useContext(UidContext);
     const trendList = useSelector((state) => state.trendingReducer);

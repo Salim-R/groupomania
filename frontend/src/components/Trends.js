@@ -4,18 +4,20 @@ import { getTrends } from "../actions/post.actions";
 import { isEmpty } from "./Utils";
 import { NavLink } from "react-router-dom";
 
+
 const Trends = () => {
     const posts = useSelector((state) => state.allPostsReducer);
     const usersData = useSelector((state) => state.usersReducer);
     const trendList = useSelector((state) => state.trendingReducer);
+
     const dispatch = useDispatch();
 
     useEffect(() => {
         if (!isEmpty(posts[0])) {
-            const postsArr = Object.keys(posts).map((i) => posts[i]);
-            let sortedArray = postsArr.sort((a, b) => {
+            const postsArr = Object.values(posts);
+            let sortedArray = postsArr.sort((a, b) => { //pour tier les posts
                 return b.likers.length - a.likers.length;
-            });
+            })
             sortedArray.length = 3;
             dispatch(getTrends(sortedArray));
         }
@@ -24,7 +26,7 @@ const Trends = () => {
     return (
         <div className="trending-container">
             <h4>Trending</h4>
-            <NavLink exact to="/tendance">
+            <NavLink to="/tendance">
                 <ul>
                     {trendList.length &&
                         trendList.map((post) => {
@@ -54,6 +56,7 @@ const Trends = () => {
                                     <div className="trend-content">
                                         <p>{post.message}</p>
                                         <span>Lire</span>
+
                                     </div>
                                 </li>
                             );

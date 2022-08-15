@@ -7,7 +7,7 @@ import Log from '../components/Log'
 import Trends from '../components/Trends';
 import FriendsHint from '../components/Profil/FriendsHint';
 const Home = () => {
-    const Uid = useContext(UidContext);
+    const Uid = useContext(UidContext); //uid de l'utilisateur
     return (
         <div className="home">
             <LeftNav />
