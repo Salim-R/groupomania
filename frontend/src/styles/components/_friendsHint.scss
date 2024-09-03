@@ -1,61 +1,138 @@
+
 .get-friends-container {
-    width: 356px;
+    width: 100%;
+    max-width: 356px;
     background: linear-gradient(145deg, $color-2 30%, #ffe1d9 100%);
     border-radius: 20px;
     padding: 20px 20px 10px;
-  
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 0 auto;
+
     h4 {
-      font-size: 1.4rem;
-      color: $color-3;
-    }
-    .icon {
-      margin: 16px auto;
-      width: 100%;
-      text-align: center;
-      i {
-        font-size: 1.6rem;
+        font-size: 1.4rem;
         color: $color-3;
-      }
+        margin-bottom: 10px;
     }
+
+    .icon {
+        margin: 16px auto;
+        width: 100%;
+        text-align: center;
+
+        i {
+            font-size: 1.6rem;
+            color: $color-3;
+        }
+    }
+
     ul {
-      width: 100%;
-      padding: 14px 0 0;
-  
-      .user-hint {
-        display: grid;
-        grid-template-columns: 20% 50% 30%;
-        align-items: center;
-        margin: 8px 0;
-  
-        img {
-          height: 46px;
-          width: 46px;
-          border-radius: 12px;
-          object-fit: cover;
-          box-shadow: 0 0 2px rgba(51, 51, 51, 0.377);
-        }
-        p {
-          text-align: left;
-          font-size: 0.9rem;
-         
-        }
-        span {
-          text-align: right;
-  
-          button {
-            background: $color-1;
-            color: $color-4;
-            padding: 10px 24px 8px;
-            transition: 0.2s;
-            border-radius: 20px;
-            font-size: 0.9rem;
-  
+        width: 100%;
+        .user-hint {
+            display: grid;
+            grid-template-columns: 20% 50% 30%;
+            align-items: center;
+            margin: 8px 0;
+            padding: 10px;
+            border-radius: 10px;
+            transition: background 0.2s;
+
             &:hover {
-              background: $color-4;
-              color: $color-1;
+                background: $color-4;
             }
-          }
+
+            img {
+                height: 46px;
+                width: 46px;
+                border-radius: 12px;
+                object-fit: cover;
+                box-shadow: 0 0 2px rgba(51, 51, 51, 0.377);
+            }
+
+            p {
+                text-align: left;
+                font-size: 0.9rem;
+                color: $black;
+            }
+
+            span {
+                text-align: right;
+
+                button {
+                    background: $color-1;
+                    color: $color-4;
+                    padding: 10px 24px 8px;
+                    transition: background 0.2s, color 0.2s;
+                    border-radius: 20px;
+                    font-size: 0.9rem;
+                    border: none;
+                    cursor: pointer;
+
+                    &:hover {
+                        background: $color-4;
+                        color: $color-1;
+                    }
+                }
+            }
         }
-      }
     }
-  }
+
+    @media screen and (max-width: 768px) {
+        padding: 15px 15px 8px;
+
+        h4 {
+            font-size: 1.2rem;
+        }
+
+        .icon i {
+            font-size: 1.4rem;
+        }
+
+        .user-hint {
+            grid-template-columns: 25% 50% 25%;
+
+            img {
+                height: 40px;
+                width: 40px;
+            }
+
+            p {
+                font-size: 0.8rem;
+            }
+
+            span button {
+                padding: 8px 20px 6px;
+                font-size: 0.8rem;
+            }
+        }
+    }
+
+    @media screen and (max-width: 480px) {
+        padding: 10px 10px 5px;
+
+        h4 {
+            font-size: 1rem;
+        }
+
+        .icon i {
+            font-size: 1.2rem;
+        }
+
+        .user-hint {
+            grid-template-columns: 30% 50% 20%;
+
+            img {
+                height: 35px;
+                width: 35px;
+            }
+
+            p {
+                font-size: 0.7rem;
+            }
+
+            span button {
+                padding: 6px 16px 4px;
+                font-size: 0.7rem;
+            }
+        }
+    }
+}

@@ -1,14 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,300&display=swap');
 
-$color-1: #f42c45;
-$color-2: #4e5166;
-$color-3: #918383;
-$color-4: #c6c7d1;
-$color-5:#8c95b3;
+$color-1: #ff353c; /* Bleu */
+$color-2: #dee4c6; /* Vert */
+$color-3: #ff353c; /* Gris */
+$color-4: #F7F8FA; /* Gris clair */
+$color-5: #8c95b3; /* Bleu-gris */
 $black: rgb(40, 40, 40);
 $white: rgb(253, 253, 253);
 $shadow: rgb(219, 218, 218);
-$font-1 :'Lato', sans-serif;
+$font-1: 'Lato', sans-serif;
 
 * {
     font-family: $font-1;
@@ -24,9 +24,17 @@ $font-1 :'Lato', sans-serif;
         background: #b1d7ff;
     }
 }
-p{
-    color: black;
+
+body {
+    line-height: 1.4rem;
+    background: $color-4;
+    color: $color-3;
 }
+
+p {
+    color: $black;
+}
+
 a,
 a:visited {
     color: $color-3;
@@ -42,10 +50,8 @@ textarea {
     margin-bottom: 15px;
 }
 
-textarea {
-    &:focus {
-        box-shadow: 0 0 4px rgba(0, 22, 44, 0.1);
-    }
+textarea:focus {
+    box-shadow: 0 0 4px rgba(0, 22, 44, 0.1);
 }
 
 button,
@@ -56,13 +62,14 @@ input[type="submit"] {
     transition: 0.2s;
     margin: 0;
     padding: 10px 20px;
-    cursor: pointer;
     font-size: 1.1rem;
     border-radius: 50px;
-    &:hover {
-        background: $color-1;
-        color: $color-2;
-    }
+}
+
+button:hover,
+input[type="submit"]:hover {
+    background: $color-1;
+    color: $color-2;
 }
 
 input[type="checkbox"] {
@@ -74,16 +81,10 @@ input[type="checkbox"] {
 
 i {
     transition: 0.15s;
-
-    &:hover {
-        transform: scale(1.1);
-    }
 }
 
-body {
-    line-height: 1.4rem;
-    background: $white;
-    color: $color-3;
+i:hover {
+    transform: scale(1.1);
 }
 
 .error {
