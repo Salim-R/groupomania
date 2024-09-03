@@ -12,7 +12,7 @@ const normalizePort = val => {
     }
     return false;
 };
-const port = normalizePort(process.env.PORT || process.env.PORT);
+const port = normalizePort(process.env.REACT_APP_PORT || process.env.PORT);
 app.set('port', port);
 
 const errorHandler = error => {

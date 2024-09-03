@@ -1,3 +1,4 @@
+
 .home {
     display: grid;
     max-width: 1200px;
@@ -6,12 +7,12 @@
     margin: 58px auto 50px;
     position: relative;
 
-    @media screen and(max-width: 990px) {
+    @media screen and (max-width: 990px) {
         grid-template-columns: 60px 1fr;
-        margin: 58px 20px 50px
+        margin: 58px 20px 50px;
     }
 
-    @media screen and(max-width: 590px) {
+    @media screen and (max-width: 590px) {
         grid-template-columns: 1fr;
         margin: 58px 8px 50px;
     }
@@ -25,6 +26,7 @@
                 background: $color-4;
                 border-radius: 20px;
                 padding: 20px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 
                 ul {
                     display: flex;
@@ -35,12 +37,13 @@
                         cursor: pointer;
                         border-radius: 20px;
                         padding: 12px 14px;
-                        transition: .2s;
+                        transition: transform 0.2s, background 0.2s;
                         margin: 0 8px;
                     }
 
                     .active-btn {
                         background: $color-1;
+                        color: $white;
 
                         &:hover {
                             background: $color-2;
@@ -49,7 +52,8 @@
 
                     li:not(.active-btn) {
                         &:hover {
-                            transform: translateX(3px)
+                            transform: translateX(3px);
+                            background: $color-5;
                         }
                     }
                 }
@@ -59,8 +63,8 @@
                         padding: 10px 14px;
                         margin: 0;
                         font-size: 1.2rem;
-
                         border-radius: 20px;
+                        border: 1px solid $color-3;
 
                         &:focus {
                             box-shadow: 0 0 3px rgba(51, 51, 51, 0.2);
@@ -68,12 +72,20 @@
                     }
 
                     input[type=submit] {
-                        padding: 0px;
+                        padding: 5px;
                         border-radius: 20px;
                         width: 35%;
+                        background: $color-1;
+                        color: $white;
+                        border: none;
+                        cursor: pointer;
+                        transition: background 0.2s;
+
+                        &:hover {
+                            background: $color-2;
+                        }
                     }
                 }
-
             }
         }
     }
@@ -81,15 +93,24 @@
     .right-side {
         position: relative;
         width: 100%;
-        margin: 0px 0 0 14px;
+        margin: 0 0 0 14px;
 
-        @media screen and(max-width: 990px) {
+        @media screen and (max-width: 990px) {
             display: none;
         }
 
         .right-side-container {
             position: fixed;
+            width: 35%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background: $white;
+            border-radius: 10px;
+            padding: 20px;
+            padding-top: 10PX;
 
+            @media screen and (min-width: 1200px) {
+                width: 404px;
+            }
         }
     }
 }

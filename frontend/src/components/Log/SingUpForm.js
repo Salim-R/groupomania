@@ -26,6 +26,7 @@ const SingUpForm = () => {
             if (!terms.checked)
                 termsError.innerHTML = "Veuillez valider les conditions générales"
         } else {
+            console.log(process.env.REACT_APP_API_URL);
             await axios({
                 method: 'post',
                 url: `${process.env.REACT_APP_API_URL}api/user/register`,

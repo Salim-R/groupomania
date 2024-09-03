@@ -1,9 +1,9 @@
 const mongoose = require("mongoose");
+mongoose.set('strictQuery', false);
 require('dotenv').config({ path: '.env' });
 
-
 // connexion a MongoAtlas
-mongoose.connect(`mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.pbtvn.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`,
+mongoose.connect(`mongodb+srv://Salim:${process.env.REACT_APP_DB_PASSWORD}@atlascluster.pbtvn.mongodb.net/?retryWrites=true&w=majority&appName=AtlasCluster`,
     {
         useNewUrlParser: true,
         useUnifiedTopology: true
