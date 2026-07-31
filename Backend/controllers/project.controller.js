@@ -200,6 +200,16 @@ exports.unlikeProject = async (req, res, next) => {
   const projectId = req.params.id;
 
   try {
+    // `deleteMany` réussit sur un projet inexistant, là où l'ajout d'un vote
+    // échoue sur la contrainte de clé étrangère. Sans cette vérification, la
+    // même adresse répondrait 404 au verbe PUT et 200 au verbe DELETE.
+    const project = await prisma.project.findUnique({
+      where: { id: projectId },
+      select: { id: true },
+    });
+
+    if (!project) return res.status(404).json({ message: 'Projet introuvable.' });
+
     await prisma.like.deleteMany({ where: { userId, projectId } });
 
     const likes = await prisma.like.count({ where: { projectId } });
@@ -249,10 +259,15 @@ exports.updateComment = async (req, res, next) => {
   try {
     const comment = await prisma.comment.findUnique({
       where: { id: req.params.commentId },
-      select: { id: true, authorId: true },
+      select: { id: true, authorId: true, projectId: true },
     });
 
-    if (!comment) return res.status(404).json({ message: 'Commentaire introuvable.' });
+    // Le commentaire doit appartenir au projet nommé dans l'adresse. Sans cette
+    // vérification, n'importe quel identifiant de projet ferait l'affaire et la
+    // route cesserait de décrire ce qu'elle manipule.
+    if (!comment || comment.projectId !== req.params.id) {
+      return res.status(404).json({ message: 'Commentaire introuvable.' });
+    }
 
     if (comment.authorId !== res.locals.user.id) {
       return res.status(403).json({ message: 'Ce commentaire ne vous appartient pas.' });
@@ -279,10 +294,12 @@ exports.deleteComment = async (req, res, next) => {
   try {
     const comment = await prisma.comment.findUnique({
       where: { id: req.params.commentId },
-      select: { id: true, authorId: true, project: { select: { authorId: true } } },
+      select: { id: true, authorId: true, projectId: true, project: { select: { authorId: true } } },
     });
 
-    if (!comment) return res.status(404).json({ message: 'Commentaire introuvable.' });
+    if (!comment || comment.projectId !== req.params.id) {
+      return res.status(404).json({ message: 'Commentaire introuvable.' });
+    }
 
     const userId = res.locals.user.id;
 

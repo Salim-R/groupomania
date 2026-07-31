@@ -324,3 +324,49 @@ describe('Audit 2.4 - plus de comptes fantômes', () => {
     expect(await prisma.user.count()).toBe(before);
   });
 });
+
+describe('Cohérence des adresses imbriquées', () => {
+  it('refuse de supprimer un commentaire via un autre projet', async () => {
+    const projetA = await createProject(alice.cookie, 'Carnet A');
+    const projetB = await createProject(alice.cookie, 'Carnet B');
+    const commentaire = await addComment(alice.cookie, projetA.id, 'Un mot sur le carnet A');
+
+    // L'adresse désigne le carnet B, le commentaire appartient au carnet A.
+    const response = await request(app)
+      .delete(`/api/project/${projetB.id}/comments/${commentaire.id}`)
+      .set('Cookie', alice.cookie);
+
+    expect(response.status).toBe(404);
+    expect(await prisma.comment.findUnique({ where: { id: commentaire.id } })).not.toBeNull();
+  });
+
+  it('refuse de modifier un commentaire via un autre projet', async () => {
+    const projetA = await createProject(alice.cookie, 'Carnet A');
+    const projetB = await createProject(alice.cookie, 'Carnet B');
+    const commentaire = await addComment(alice.cookie, projetA.id, 'Texte initial');
+
+    const response = await request(app)
+      .put(`/api/project/${projetB.id}/comments/${commentaire.id}`)
+      .set('Cookie', alice.cookie)
+      .send({ text: 'Texte remplacé' });
+
+    expect(response.status).toBe(404);
+
+    const inchange = await prisma.comment.findUnique({ where: { id: commentaire.id } });
+    expect(inchange.text).toBe('Texte initial');
+  });
+
+  it('répond 404 des deux côtés du vote quand le projet est inconnu', async () => {
+    const inconnu = 'clw000000000000000000000';
+
+    const ajout = await request(app)
+      .put(`/api/project/${inconnu}/like`)
+      .set('Cookie', alice.cookie);
+
+    const retrait = await request(app)
+      .delete(`/api/project/${inconnu}/like`)
+      .set('Cookie', alice.cookie);
+
+    expect([ajout.status, retrait.status]).toEqual([404, 404]);
+  });
+});
