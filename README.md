@@ -11,6 +11,14 @@ API          57 tests          0 vulnérabilité en production
 Bout en bout 13 tests          0 violation WCAG 2.1 AA
 ```
 
+## Démonstration en ligne
+
+**[letabli.vercel.app](https://letabli.vercel.app)** · API sur [letabli.onrender.com](https://letabli.onrender.com/health)
+
+Se connecter avec `margaux@exemple.fr` et le mot de passe `atelier2026` pour créer un carnet, ajouter des étapes et les réordonner. Tous les comptes de démonstration partagent ce mot de passe ; la liste complète est [plus bas](#comptes-de-démonstration).
+
+> L'API est hébergée sur une offre gratuite qui met le service en veille après quinze minutes sans trafic. **Le tout premier chargement peut donc prendre une minute**, le temps que l'instance se réveille. Les suivants sont immédiats.
+
 ---
 
 ## Ce que ce dépôt raconte
@@ -133,11 +141,11 @@ Le réflexe aurait été un repli JavaScript sur l'image, sauf que `onError` ne 
 
 ### Les formulaires fonctionnent sans JavaScript
 
-Les mutations passent par des Server Actions attachées à l'attribut `action` du formulaire, jamais à un gestionnaire `onSubmit`. La soumission aboutit donc même si le script n'a pas chargé ou a échoué — ce que la plupart des applications React ont cessé de savoir faire. `useActionState` n'ajoute que l'affichage progressif de l'état ; il ne conditionne pas le fonctionnement.
+Les mutations passent par des Server Actions attachées à l'attribut `action` du formulaire, jamais à un gestionnaire `onSubmit`. La soumission aboutit donc même si le script n'a pas chargé ou a échoué - ce que la plupart des applications React ont cessé de savoir faire. `useActionState` n'ajoute que l'affichage progressif de l'état ; il ne conditionne pas le fonctionnement.
 
 Le point délicat est le relais de session : quand une Server Action authentifie un visiteur, c'est le serveur Next qui reçoit l'en-tête `Set-Cookie` de l'API, pas le navigateur. Sans réémission explicite, la session serait perdue aussitôt obtenue. La lecture se fait par `getSetCookie()` et non `get('set-cookie')` : ce dernier concatène les cookies multiples en une chaîne dont le découpage devient ambigu dès qu'une valeur contient une virgule, ce qui est le cas des dates d'expiration.
 
-Corollaire moins évident, découvert en testant : `revalidatePath` invalide le cache d'une route, mais seule une soumission de formulaire redemande la page d'elle-même. Une action déclenchée à la main — supprimer un commentaire, déplacer une étape — exige un `router.refresh()` explicite.
+Corollaire moins évident, découvert en testant : `revalidatePath` invalide le cache d'une route, mais seule une soumission de formulaire redemande la page d'elle-même. Une action déclenchée à la main - supprimer un commentaire, déplacer une étape - exige un `router.refresh()` explicite.
 
 ### Images : 12 Ko servis en 1,4 Ko
 
@@ -148,11 +156,11 @@ Corollaire moins évident, découvert en testant : `revalidatePath` invalide le 
 | Sans AVIF | WebP | 2,2 Ko |
 | Navigateur moderne | **AVIF** | **1,4 Ko** |
 
-Soit **88 % de réduction** sur le chemin le plus courant, avec repli propre. L'attribut `sizes` fait le reste : les cartes du fil demandent une variante de 640 pixels et non de 1200, les avatars de 64 pixels à qualité réduite — un cercle de 32 pixels ne justifie pas 75 % de qualité JPEG.
+Soit **88 % de réduction** sur le chemin le plus courant, avec repli propre. L'attribut `sizes` fait le reste : les cartes du fil demandent une variante de 640 pixels et non de 1200, les avatars de 64 pixels à qualité réduite - un cercle de 32 pixels ne justifie pas 75 % de qualité JPEG.
 
 Deux durcissements de Next 16 ont été rencontrés au passage. L'optimiseur **refuse les hôtes résolvant vers une adresse privée**, protection contre le SSRF : sans elle, il peut servir de relais vers le réseau interne. L'exception est donc conditionnée à `NODE_ENV`, et la protection reste entière en production. Les **niveaux de qualité doivent être déclarés**, pour qu'une valeur arbitraire dans une URL ne fasse pas générer une infinité de variantes.
 
-Les 47 visuels de démonstration sont **générés, pas empruntés** : un SVG paramétré par matière — bois chaud, acier froid, calcaire clair — converti en JPEG, avec un grain léger parce qu'un dégradé pur se repère immédiatement comme un aplat artificiel. 692 Ko au total, non versionnés puisqu'ils se régénèrent.
+Les 47 visuels de démonstration sont **générés, pas empruntés** : un SVG paramétré par matière - bois chaud, acier froid, calcaire clair - converti en JPEG, avec un grain léger parce qu'un dégradé pur se repère immédiatement comme un aplat artificiel. 692 Ko au total, non versionnés puisqu'ils se régénèrent.
 
 ### Streaming : la page part avant les données
 
@@ -161,7 +169,7 @@ accroche + squelette :  64 ms
 contenu réel :         105 ms
 ```
 
-L'accroche et la structure partent immédiatement, la grille arrive en flux. En local l'API est sur la même machine ; en production, hébergée séparément, cet écart se compte en centaines de millisecondes — c'est autant d'attente devant une page blanche que le streaming supprime.
+L'accroche et la structure partent immédiatement, la grille arrive en flux. En local l'API est sur la même machine ; en production, hébergée séparément, cet écart se compte en centaines de millisecondes - c'est autant d'attente devant une page blanche que le streaming supprime.
 
 Les squelettes reproduisent la **géométrie exacte** du contenu final : mêmes rapports de forme, mêmes hauteurs de ligne. Un squelette approximatif est pire qu'un simple indicateur d'attente, puisqu'il provoque à l'arrivée des données le décalage de mise en page que mesure le CLS.
 
@@ -169,7 +177,7 @@ Les squelettes reproduisent la **géométrie exacte** du contenu final : mêmes 
 
 Chaque carnet a sa propre vignette, composée depuis ses données : titre, atelier, métier, avancement. Une capture statique unique donnerait la même image à dix-sept carnets, et le lien partagé ne dirait rien de son contenu.
 
-Le rendu passe par Satori, qui n'implémente qu'un sous-ensemble de CSS : flexbox uniquement, `display: flex` obligatoire sur tout conteneur à plusieurs enfants, et pas de rognage multiligne — la coupe des titres longs est donc faite en amont, sur la donnée.
+Le rendu passe par Satori, qui n'implémente qu'un sous-ensemble de CSS : flexbox uniquement, `display: flex` obligatoire sur tout conteneur à plusieurs enfants, et pas de rognage multiligne - la coupe des titres longs est donc faite en amont, sur la donnée.
 
 ### Accessibilité
 
@@ -238,13 +246,19 @@ L'application est sur `http://localhost:3000`.
 
 ### Comptes de démonstration
 
-| Adresse | Métier |
-|---|---|
-| `margaux@exemple.fr` | Ébénisterie |
-| `yanis@exemple.fr` | Tatouage |
-| `ravel@exemple.fr` | Mécanique ancienne |
+| Adresse | Atelier | Métier |
+|---|---|---|
+| `margaux@exemple.fr` | Margaux Ferrand | Ébénisterie |
+| `ravel@exemple.fr` | Atelier Ravel | Mécanique ancienne |
+| `forge@exemple.fr` | Forge du Vésinet | Coutellerie |
+| `vasseur@exemple.fr` | Lutherie Vasseur | Lutherie |
+| `terrefeu@exemple.fr` | Terre & Feu | Céramique |
+| `solene@exemple.fr` | Atelier Solène Marchand | Tapisserie d'ameublement |
+| `pierretrait@exemple.fr` | Pierre & Trait | Taille de pierre |
 
 Mot de passe commun : `atelier2026`
+
+Deux comptes valent mieux qu'un pour explorer : les autorisations ne se voient que depuis un second atelier, qui n'a aucun panneau de gestion sur les carnets du premier.
 
 ### Tests
 
@@ -299,8 +313,10 @@ Autant les écrire que les laisser découvrir :
 - **Le filtre de routes côté client est une commodité d'affichage, pas une mesure de sécurité.** Il évite de montrer un formulaire à quelqu'un qui sera refusé ; l'autorisation réelle est vérifiée par l'API, qui seule détient le secret de signature. Un test de bout en bout vérifie d'ailleurs qu'un atelier atteignant directement l'adresse d'un carnet tiers n'y obtient aucun panneau de gestion.
 - L'état d'abonnement affiché sur une page de profil n'est pas encore renvoyé par l'API : le bouton part de l'état « non abonné » au premier rendu.
 - Les images de partage utilisent la police par défaut de Satori et non la serif du site. Charger une police personnalisée imposerait de versionner un fichier binaire ; l'écart a été jugé plus acceptable que la dépendance.
-- **axe-core ne détecte qu'une partie des problèmes d'accessibilité** — de l'ordre de quarante pour cent selon ses propres auteurs. Il attrape en revanche infailliblement les régressions mécaniques, ce qui est précisément ce qui se casse sans qu'on s'en aperçoive. Les vérifications qu'il ne sait pas faire, comme l'ordre de tabulation ou la pertinence d'un intitulé, sont couvertes par des tests au clavier dédiés.
+- **axe-core ne détecte qu'une partie des problèmes d'accessibilité** - de l'ordre de quarante pour cent selon ses propres auteurs. Il attrape en revanche infailliblement les régressions mécaniques, ce qui est précisément ce qui se casse sans qu'on s'en aperçoive. Les vérifications qu'il ne sait pas faire, comme l'ordre de tabulation ou la pertinence d'un intitulé, sont couvertes par des tests au clavier dédiés.
 - Les tests de bout en bout ne couvrent que Chromium. Ajouter Firefox et WebKit est une ligne de configuration, mais triplerait la durée de la vérification pour un gain limité à ce stade.
+- **L'instance de démonstration se met en veille après quinze minutes sans trafic**, le plan gratuit de Render ne maintenant pas de processus permanent. Le premier appel après une veille attend le réveil, de l'ordre d'une minute. Un plan payant supprime le comportement sans changer une ligne de code.
+- **Les données de la démonstration sont réinitialisées à chaque déploiement.** Le seed tourne pendant le build, parce que c'est lui qui génère les visuels : les images vivent sur un système de fichiers éphémère, et les régénérer au même moment que les lignes correspondantes est la seule façon de garantir que la base ne référence pas un fichier absent. Conséquence assumée : un compte créé par un visiteur ne survit pas au déploiement suivant. Rendre les inscriptions persistantes suppose de sortir les fichiers vers un stockage objet, ce qui est un choix d'hébergement, pas une correction.
 
 ---
 
