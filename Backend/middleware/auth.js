@@ -8,11 +8,12 @@ const readToken = (req) => (req.cookies && req.cookies.jwt) || null;
 /**
  * `jose` remplace `jsonwebtoken`.
  *
- * `jsonwebtoken@9` dépend de `jws` → `jwa` → `buffer-equal-constant-time`, qui
- * utilise `SlowBuffer`. Cette API a été retirée de Node : la bibliothèque lève
- * une TypeError au chargement sur les versions récentes, et sa chaîne de
- * dépendances n'est plus maintenue. `jose` s'appuie sur WebCrypto natif et
- * n'embarque aucune dépendance.
+ * `jsonwebtoken@9` passait par `jws` → `jwa` → `buffer-equal-constant-time`,
+ * qui appelait `SlowBuffer`, une API retirée de Node : la bibliothèque levait
+ * une TypeError au chargement. Le maillon fautif a depuis été corrigé en
+ * amont, mais la chaîne reste longue pour ce qu'elle rend.
+ *
+ * `jose` s'appuie sur WebCrypto natif et n'embarque aucune dépendance.
  */
 const secretKey = () => new TextEncoder().encode(process.env.TOKEN_SECRET);
 

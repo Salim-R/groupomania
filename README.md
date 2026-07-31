@@ -123,7 +123,9 @@ Conséquences : une insertion en doublon échoue toujours sur-le-champ, avec un 
 
 ### `jose` plutôt que `jsonwebtoken`
 
-Les tests refusaient de démarrer. Diagnostic : `jsonwebtoken@9` dépend de `jws` → `jwa` → `buffer-equal-constant-time`, qui utilise `SlowBuffer`, une API retirée de Node. La bibliothèque lève une `TypeError` au chargement sur les versions récentes, et toute cette chaîne de dépendances est abandonnée par ses mainteneurs.
+Les tests refusaient de démarrer. Diagnostic : `jsonwebtoken@9` passait alors par `jws` → `jwa` → `buffer-equal-constant-time`, qui appelait `SlowBuffer`, une API retirée de Node. La bibliothèque levait une `TypeError` au chargement.
+
+Ce point précis a depuis été corrigé en amont, et une version récente de `jsonwebtoken` se charge sans erreur. La migration n'est pas revenue en arrière pour autant : une chaîne de quatre paquets dont le maillon fautif n'était plus maintenu reste une dépendance qu'on préfère ne pas porter.
 
 `jose` s'appuie sur WebCrypto natif et n'embarque aucune dépendance. Sa durée d'expiration s'exprime en littéral (`"3d"`), ce qui rend l'erreur d'unité du jeton de huit ans structurellement impossible à reproduire.
 
