@@ -152,6 +152,13 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
                     </p>
                   )}
 
+                  {/* `alt` vide, faute de mieux. Contrairement aux avatars, cette
+                      photo porte une information que le titre de l'étape ne
+                      restitue pas : elle mériterait une description. Mais aucun
+                      texte alternatif n'est demandé au dépôt, et en fabriquer un
+                      à partir du titre reviendrait à répéter la ligne du dessus.
+                      La correction est un champ `alt` sur Step, pas une rustine
+                      ici. Limite écrite dans le README. */}
                   {image && (
                     <div className="relative mt-4 aspect-[4/3] overflow-hidden rounded-lg border border-rule">
                       <Image

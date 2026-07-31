@@ -189,7 +189,7 @@ Pas une case à cocher, des choix conscients :
 - **Les étapes sont une liste ordonnée** (`<ol>`) : l'ordre porte du sens, et un lecteur d'écran annonce « 2 sur 5 ».
 - Champs liés par `htmlFor`, `aria-invalid`, `aria-describedby` et `role="alert"` sur les erreurs, pour qu'elles soient annoncées à leur apparition et non seulement lues au retour dans le champ.
 - Anneau de focus visible imposé, `aria-current` sur la navigation, lien d'évitement, respect de `prefers-reduced-motion`, thème sombre natif.
-- Images décoratives en `alt=""` : le nom de l'artisan est déjà écrit à côté, le répéter le ferait annoncer deux fois.
+- **Avatars et vignettes en `alt=""`** : le nom de l'artisan et le titre du carnet sont écrits juste à côté. Les répéter les ferait annoncer deux fois, ce qui dessert la personne qu'on cherche à servir.
 
 ### Autres
 
@@ -316,6 +316,7 @@ Autant les écrire que les laisser découvrir :
 - L'état d'abonnement affiché sur une page de profil n'est pas encore renvoyé par l'API : le bouton part de l'état « non abonné » au premier rendu.
 - Les images de partage utilisent la police par défaut de Satori et non la serif du site. Charger une police personnalisée imposerait de versionner un fichier binaire ; l'écart a été jugé plus acceptable que la dépendance.
 - **axe-core ne détecte qu'une partie des problèmes d'accessibilité** - de l'ordre de quarante pour cent selon ses propres auteurs. Il attrape en revanche infailliblement les régressions mécaniques, ce qui est précisément ce qui se casse sans qu'on s'en aperçoive. Les vérifications qu'il ne sait pas faire, comme l'ordre de tabulation ou la pertinence d'un intitulé, sont couvertes par des tests au clavier dédiés.
+- **Les photos d'étape n'ont pas de texte alternatif.** Elles sont servies en `alt=""`, faute de mieux : contrairement aux avatars, elles portent une information que le titre de l'étape ne restitue pas, mais aucune description n'est demandée au moment du dépôt. En fabriquer une à partir du titre reviendrait à répéter la ligne du dessus. La correction n'est pas cosmétique, c'est un champ `alt` sur `Step`, un champ de formulaire et la migration qui va avec.
 - Les tests de bout en bout ne couvrent que Chromium. Ajouter Firefox et WebKit est une ligne de configuration, mais triplerait la durée de la vérification pour un gain limité à ce stade.
 - **L'instance de démonstration se met en veille après quinze minutes sans trafic**, le plan gratuit de Render ne maintenant pas de processus permanent. Le premier appel après une veille attend le réveil, de l'ordre d'une minute. Un plan payant supprime le comportement sans changer une ligne de code.
 - **Les données de la démonstration sont réinitialisées à chaque déploiement.** Le seed tourne pendant le build, parce que c'est lui qui génère les visuels : les images vivent sur un système de fichiers éphémère, et les régénérer au même moment que les lignes correspondantes est la seule façon de garantir que la base ne référence pas un fichier absent. Conséquence assumée : un compte créé par un visiteur ne survit pas au déploiement suivant. Rendre les inscriptions persistantes suppose de sortir les fichiers vers un stockage objet, ce qui est un choix d'hébergement, pas une correction.
