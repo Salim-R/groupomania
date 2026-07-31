@@ -7,7 +7,7 @@ Application complète en deux parties : une API Node/Express sur PostgreSQL, et 
 **Stack** · Next.js 16 · React 19 · TypeScript strict · Tailwind 4 · Node · Express · PostgreSQL · Prisma 6 · Jest · Playwright · Zod · jose
 
 ```
-API          66 tests          0 vulnérabilité en production
+API          73 tests          0 vulnérabilité en production
 Bout en bout 13 tests          0 violation WCAG 2.1 AA
 ```
 
@@ -73,7 +73,7 @@ Ces tests passent par HTTP et ne connaissent rien du moteur de stockage. C'est c
 npm test
 ```
 
-`66 tests, 5 suites, 0 échec.`
+`73 tests, 6 suites, 0 échec.`
 
 ### Et treize tests de bout en bout, dont un à deux ateliers
 
