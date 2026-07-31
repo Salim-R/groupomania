@@ -14,7 +14,7 @@ import { NextResponse, type NextRequest } from 'next/server';
  * Le fichier s'appelle `proxy` et non `middleware` : Next 16 a déprécié
  * l'ancienne convention.
  */
-const protectedPaths = [/^\/carnets\/nouveau$/, /^\/carnets\/[^/]+\/editer$/, /^\/parametres$/];
+const protectedPaths = [/^\/carnets\/nouveau$/];
 
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -36,5 +36,5 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/carnets/:path*', '/parametres'],
+  matcher: ['/carnets/:path*'],
 };
