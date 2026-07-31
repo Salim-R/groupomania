@@ -1,5 +1,6 @@
 'use server';
 
+import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
 import { callApi, clearSessionCookie } from '@/lib/server/api';
@@ -11,6 +12,19 @@ export interface AuthFormState {
   /** Conservé pour réafficher la saisie après un échec, sans le mot de passe. */
   values?: { pseudo?: string; email?: string };
 }
+
+/**
+ * Vide le cache de routeur pour tout ce qui partage la mise en page racine.
+ *
+ * L'en-tête du site lit la session et vit dans cette mise en page. Sans cette
+ * invalidation, la redirection qui suit une connexion ou une déconnexion est
+ * une navigation côté client : Next ressert la version déjà en mémoire, donc
+ * un en-tête qui contredit l'état réel de la session.
+ *
+ * Invisible en développement, où le cache est désactivé ; systématique sur un
+ * build de production, et c'est là que ça compte.
+ */
+const oublierLaSession = () => revalidatePath('/', 'layout');
 
 const safeRedirect = (value: FormDataEntryValue | null) => {
   const path = typeof value === 'string' ? value : '';
@@ -46,6 +60,7 @@ export async function signInAction(
 
   // `redirect` lève une exception interceptée par Next : rien ne doit être
   // écrit après, et l'appel est volontairement hors du bloc try.
+  oublierLaSession();
   redirect(safeRedirect(formData.get('suite')));
 }
 
@@ -80,11 +95,13 @@ export async function signUpAction(
     };
   }
 
+  oublierLaSession();
   redirect(safeRedirect(formData.get('suite')));
 }
 
 export async function signOutAction() {
   await callApi('/api/user/logout', { method: 'GET' });
   await clearSessionCookie();
+  oublierLaSession();
   redirect('/');
 }
