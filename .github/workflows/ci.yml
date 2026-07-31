@@ -133,8 +133,15 @@ jobs:
           npm start &
           until curl -sf http://localhost:5000/health > /dev/null; do sleep 1; done
 
+      # PORT vaut 5000 pour tout le travail, parce que l'API le lit. Or
+      # `next start` lit la même variable : sans cette redéfinition, le client
+      # tente de se lier au port déjà occupé par l'API et abandonne sur
+      # EADDRINUSE, tandis que l'attente sur le port 3000 ne peut jamais
+      # aboutir.
       - name: Compiler et démarrer le client
         working-directory: web
+        env:
+          PORT: 3000
         run: |
           npm run build
           npm start &
