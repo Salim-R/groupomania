@@ -1,49 +1,41 @@
 const http = require('http');
+
 const app = require('./app');
 
-const normalizePort = val => {
-    const port = parseInt(val, 10);
-
-    if (isNaN(port)) {
-        return val;
-    }
-    if (port >= 0) {
-        return port;
-    }
-    return false;
-};
-const port = normalizePort(process.env.REACT_APP_PORT || process.env.PORT);
+const port = Number.parseInt(process.env.PORT, 10) || 5000;
 app.set('port', port);
-
-const errorHandler = error => {
-    if (error.syscall !== 'listen') {
-        throw error;
-    }
-    const address = server.address();
-    const bind = typeof address === 'string' ? 'pipe ' + address : 'port: ' + port;
-    switch (error.code) {
-        case 'EACCES':
-            console.error(bind + ' requires elevated privileges.');
-            process.exit(1);
-            break;
-        case 'EADDRINUSE':
-            console.error(bind + ' is already in use.');
-            process.exit(1);
-            break;
-        default:
-            throw error;
-    }
-};
 
 const server = http.createServer(app);
 
-server.on('error', errorHandler);
-server.on('listening', () => {
-    const address = server.address();
-    const bind = typeof address === 'string' ? 'pipe ' + address : 'port ' + port;
-    console.log('Listening on ' + bind);
+server.on('error', (error) => {
+  if (error.syscall !== 'listen') throw error;
+
+  switch (error.code) {
+    case 'EACCES':
+      console.error(`Le port ${port} exige des privilèges élevés.`);
+      process.exit(1);
+      break;
+    case 'EADDRINUSE':
+      console.error(`Le port ${port} est déjà utilisé.`);
+      process.exit(1);
+      break;
+    default:
+      throw error;
+  }
 });
+
+server.on('listening', () => console.log(`API à l'écoute sur le port ${port}.`));
 
 server.listen(port);
 
-module.exports = app;
+// Arrêt propre : sans cela, l'hébergeur coupe le processus au milieu des
+// requêtes en cours lors d'un redéploiement.
+const shutdown = (signal) => () => {
+  console.log(`${signal} reçu, arrêt du serveur.`);
+  server.close(() => process.exit(0));
+};
+
+process.on('SIGTERM', shutdown('SIGTERM'));
+process.on('SIGINT', shutdown('SIGINT'));
+
+module.exports = server;

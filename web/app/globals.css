@@ -1,0 +1,191 @@
+@import "tailwindcss";
+
+/**
+ * Identité de l'Établi.
+ *
+ * L'atelier plutôt que le tableau de bord : fond papier, encre chaude, laiton
+ * en accent. Les couleurs sont déclarées une fois en variables, jamais en
+ * valeurs littérales dans les composants, pour que le thème sombre soit une
+ * simple redéfinition et non une seconde feuille de style.
+ */
+:root {
+  color-scheme: light;
+
+  --paper: #faf7f2;
+  --paper-raised: #ffffff;
+  --paper-sunken: #f1ece3;
+
+  --ink: #241c15;
+  --ink-muted: #6b5f54;
+
+  /* Le gris le plus clair de la palette sert malgré tout à du texte : dates,
+     métiers, biographies tronquées. La valeur d'origine (#9c8f83) plafonnait à
+     3,14:1 sur blanc, sous le seuil AA de 4,5:1. Celle-ci atteint 4,95:1. */
+  --ink-faint: #7a6e63;
+
+  --rule: #e3dbcf;
+  --rule-strong: #cfc3b3;
+
+  /**
+   * Laiton : l'accent, réservé aux actions et aux éléments actifs.
+   *
+   * La teinte d'origine (#b4703a) était trop claire : 3,92:1 sur le papier et
+   * 3,95:1 sous du texte blanc, là où WCAG AA exige 4,5:1. Le défaut ne se voit
+   * pas à l'œil sur un écran de bureau bien réglé — c'est un audit automatisé
+   * qui l'a relevé. La teinte retenue atteint 5,4:1 sur le papier et 5,7:1 avec
+   * du blanc.
+   */
+  --brass: #92582b;
+  --brass-strong: #7a4922;
+  --brass-wash: #f6ece1;
+
+  /* Couleur du texte posé SUR le laiton. Elle ne peut pas être figée à blanc :
+     en thème sombre, l'accent s'éclaircit et le blanc n'y contraste plus. */
+  --on-brass: #ffffff;
+
+  --sap: #4a6b52;
+  --sap-wash: #e9f0ea;
+
+  --alert: #a33a2b;
+  --alert-wash: #f8e9e6;
+
+  --shadow-card: 0 1px 2px rgb(36 28 21 / 0.06), 0 8px 24px -12px rgb(36 28 21 / 0.18);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+
+    --paper: #17130f;
+    --paper-raised: #211b16;
+    --paper-sunken: #100d0a;
+
+    --ink: #f2ece4;
+    --ink-muted: #b3a698;
+
+    /* Même correction en miroir : la valeur d'origine (#7d7266) ne donnait que
+       3,63:1 sur le fond sombre. Celle-ci atteint 5,3:1. */
+    --ink-faint: #9a8e80;
+
+    --rule: #322921;
+    --rule-strong: #473a2f;
+
+    --brass: #d8934f;
+    --brass-strong: #eaa964;
+    --brass-wash: #2a1f15;
+
+    /* Sur un accent clair, seul un texte sombre contraste : du blanc y
+       tomberait à 2,6:1. */
+    --on-brass: #1a120a;
+
+    --sap: #8bb094;
+    --sap-wash: #1a231c;
+
+    --alert: #e08b7c;
+    --alert-wash: #2a1a17;
+
+    --shadow-card: 0 1px 2px rgb(0 0 0 / 0.4), 0 8px 24px -12px rgb(0 0 0 / 0.6);
+  }
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-paper-raised: var(--paper-raised);
+  --color-paper-sunken: var(--paper-sunken);
+
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-ink-faint: var(--ink-faint);
+
+  --color-rule: var(--rule);
+  --color-rule-strong: var(--rule-strong);
+
+  --color-brass: var(--brass);
+  --color-brass-strong: var(--brass-strong);
+  --color-brass-wash: var(--brass-wash);
+  --color-on-brass: var(--on-brass);
+
+  --color-sap: var(--sap);
+  --color-sap-wash: var(--sap-wash);
+
+  --color-alert: var(--alert);
+  --color-alert-wash: var(--alert-wash);
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
+
+  --shadow-card: var(--shadow-card);
+}
+
+body {
+  background-color: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans);
+}
+
+/**
+ * Anneau de focus visible et homogène.
+ *
+ * Le style par défaut des navigateurs disparaît souvent sous les fonds
+ * personnalisés. Une bordure au contraste suffisant est la condition d'une
+ * navigation au clavier utilisable : sans elle, on ne sait plus où l'on est.
+ */
+:where(a, button, input, textarea, select, [tabindex]):focus-visible {
+  outline: 2px solid var(--brass);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+
+/**
+ * Transitions de vue entre pages.
+ *
+ * Le fondu s'applique à l'ensemble de la page ; les éléments portant un
+ * `view-transition-name` (la couverture d'un carnet, par exemple) sont reliés
+ * d'une page à l'autre et animés séparément, ce qui donne la continuité entre
+ * la vignette du fil et l'image de la page de détail.
+ */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 220ms;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Respect de la préférence système : aucune animation imposée. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Les transitions de vue échappent aux règles ci-dessus : elles sont portées
+     par des pseudo-éléments du document, que le sélecteur universel n'atteint
+     pas. Il faut donc les neutraliser explicitement, sans quoi la préférence
+     de l'utilisateur serait ignorée précisément là où le mouvement est le plus
+     ample. */
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+
+/** Lien d'évitement : premier élément focalisable, masqué jusqu'au focus. */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 100;
+  padding: 0.75rem 1rem;
+  background-color: var(--brass);
+  color: #fff;
+  font-weight: 600;
+}
+
+.skip-link:focus {
+  left: 0.5rem;
+  top: 0.5rem;
+}

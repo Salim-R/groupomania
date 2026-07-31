@@ -1,0 +1,148 @@
+name: Intégration continue
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# Une nouvelle poussée annule la vérification en cours sur la même branche :
+# inutile de payer deux exécutions pour un état intermédiaire déjà dépassé.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  api:
+    name: API · tests d'attaque
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: Backend/package-lock.json
+
+      - name: Installer les dépendances
+        working-directory: Backend
+        run: npm ci
+
+      # Aucun service de base de données n'est déclaré : la suite démarre son
+      # propre PostgreSQL embarqué, exactement comme en local. La vérification
+      # tourne donc sur le même moteur que la production, sans conteneur à
+      # configurer ni divergence entre les deux environnements.
+      - name: Tests
+        working-directory: Backend
+        env:
+          TOKEN_SECRET: secret-d-integration-continue-non-utilise-en-production
+        run: npm test
+
+      - name: Vulnérabilités de production
+        working-directory: Backend
+        run: npm audit --omit=dev --audit-level=high
+
+  web:
+    name: Client · types, analyse et compilation
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      - name: Installer les dépendances
+        working-directory: web
+        run: npm ci
+
+      - name: Vérification des types
+        working-directory: web
+        run: npm run typecheck
+
+      - name: Analyse statique
+        working-directory: web
+        run: npm run lint
+
+      - name: Compilation
+        working-directory: web
+        env:
+          NEXT_PUBLIC_API_URL: http://localhost:5000
+        run: npm run build
+
+  e2e:
+    name: Bout en bout · parcours, deux ateliers, accessibilité
+    runs-on: ubuntu-latest
+    # Inutile de démarrer toute la pile si les vérifications rapides échouent :
+    # l'échec serait plus lent à obtenir et moins lisible.
+    needs: [api, web]
+
+    env:
+      DATABASE_URL: postgresql://postgres:postgres@localhost:55432/etabli
+      TOKEN_SECRET: secret-d-integration-continue-non-utilise-en-production
+      CLIENT_URL: http://localhost:3000
+      NEXT_PUBLIC_API_URL: http://localhost:5000
+      PORT: 5000
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Installer l'API
+        working-directory: Backend
+        run: npm ci
+
+      - name: Installer le client
+        working-directory: web
+        run: npm ci
+
+      - name: Installer le navigateur
+        working-directory: web
+        run: npx playwright install --with-deps chromium
+
+      # Le PostgreSQL embarqué sert aussi ici : aucune définition de service,
+      # aucun conteneur, et la même commande qu'en développement.
+      - name: Démarrer la base
+        working-directory: Backend
+        run: |
+          npm run db:dev &
+          until nc -z localhost 55432; do sleep 1; done
+
+      - name: Peupler la base
+        working-directory: Backend
+        run: npm run db:seed
+
+      - name: Démarrer l'API
+        working-directory: Backend
+        run: |
+          npm start &
+          until curl -sf http://localhost:5000/health > /dev/null; do sleep 1; done
+
+      - name: Compiler et démarrer le client
+        working-directory: web
+        run: |
+          npm run build
+          npm start &
+          until curl -sf http://localhost:3000 > /dev/null; do sleep 1; done
+
+      - name: Tests de bout en bout
+        working-directory: web
+        run: npm run e2e
+
+      # Conservé même en cas d'échec : c'est précisément là que le rapport,
+      # les traces et les vidéos servent.
+      - name: Conserver le rapport
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rapport-playwright
+          path: web/playwright-report/
+          retention-days: 7

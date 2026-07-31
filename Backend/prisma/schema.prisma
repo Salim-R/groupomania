@@ -1,0 +1,151 @@
+// Établi - carnet de bord public pour artisans et créateurs.
+//
+// Le modèle précédent stockait les relations sous forme de tableaux de chaînes
+// dans le document utilisateur (followers, following, likes). Aucune intégrité
+// référentielle, aucune unicité, et la même information dupliquée des deux
+// côtés de chaque relation. Le passage au relationnel confie ces garanties à
+// la base plutôt qu'au code applicatif.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ProjectStatus {
+  IN_PROGRESS
+  COMPLETED
+  ARCHIVED
+}
+
+model User {
+  id        String   @id @default(cuid())
+  pseudo    String   @unique
+  email     String   @unique
+  password  String
+  bio       String   @default("") @db.VarChar(1024)
+
+  // Nul tant qu'aucune photo n'a été déposée. La base ne doit pas référencer
+  // un fichier dont elle ne garantit pas l'existence : un chemin par défaut
+  // pointant vers une image absente produit une requête en échec sur chaque
+  // profil, et le client ne peut pas distinguer « pas de photo » de « photo
+  // introuvable ». L'affichage de repli est la responsabilité de l'interface.
+  picture   String?
+
+  // Métier et ville : ce sont les deux critères par lesquels on cherche
+  // un artisan. Facultatifs pour ne pas bloquer l'inscription.
+  craft     String?
+  city      String?
+
+  isAdmin   Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  projects  Project[]
+  comments  Comment[]
+  likes     Like[]
+  following Follow[]  @relation("Follower")
+  followers Follow[]  @relation("Following")
+
+  @@index([craft])
+  @@index([city])
+}
+
+model Project {
+  id         String        @id @default(cuid())
+  title      String        @db.VarChar(120)
+  summary    String        @default("") @db.VarChar(500)
+  coverImage String?
+  status     ProjectStatus @default(IN_PROGRESS)
+
+  authorId   String
+  // La suppression d'un compte emporte ses projets : la base s'en charge,
+  // le code applicatif n'a rien à nettoyer et ne peut pas oublier de le faire.
+  author     User          @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  steps      Step[]
+  comments   Comment[]
+  likes      Like[]
+
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+
+  @@index([authorId])
+  @@index([createdAt])
+  @@index([status])
+}
+
+/// Une étape du carnet de bord : une photo, un titre, quelques lignes.
+model Step {
+  id        String   @id @default(cuid())
+
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  /// Rang de l'étape dans le projet. La contrainte d'unicité garantit qu'aucun
+  /// projet ne peut avoir deux étapes au même rang, ce qu'un document imbriqué
+  /// ne sait pas garantir.
+  position  Int
+  title     String   @db.VarChar(120)
+  body      String   @default("") @db.VarChar(2000)
+  image     String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([projectId, position])
+  @@index([projectId])
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  authorId  String
+  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  text      String   @db.VarChar(500)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([projectId])
+  @@index([authorId])
+}
+
+/// Table de jointure des mentions « j'aime ».
+///
+/// La clé primaire composite rend le double vote impossible au niveau de la
+/// base. La version MongoDB s'appuyait sur $addToSet, une garantie applicative
+/// qu'une écriture concurrente pouvait contourner.
+model Like {
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@id([userId, projectId])
+  @@index([projectId])
+}
+
+/// Table de jointure des abonnements.
+model Follow {
+  followerId  String
+  follower    User     @relation("Follower", fields: [followerId], references: [id], onDelete: Cascade)
+
+  followingId String
+  following   User     @relation("Following", fields: [followingId], references: [id], onDelete: Cascade)
+
+  createdAt   DateTime @default(now())
+
+  @@id([followerId, followingId])
+  @@index([followingId])
+}

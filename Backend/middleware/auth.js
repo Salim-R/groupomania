@@ -1,39 +1,80 @@
-const jwt = require("jsonwebtoken");
-const UserModel = require("../models/user.model");
+const { jwtVerify } = require('jose');
 
-module.exports.checkUser = (req, res, next) => {
-  const token = req.cookies.jwt;
-  if (token) {
-    jwt.verify(token, process.env.TOKEN_SECRET, async (err, decodedToken) => {
-      if (err) {
-        res.locals.user = null;
-        // res.cookie("jwt", "", { maxAge: 1 });
-        next();
-      } else {
-        let user = await UserModel.findById(decodedToken.id);
-        res.locals.user = user;
-        next();
-      }
-    });
-  } else {
-    res.locals.user = null;
-    next();
-  }
+const prisma = require('../lib/prisma');
+const { publicUser } = require('../lib/selectors');
+
+const readToken = (req) => (req.cookies && req.cookies.jwt) || null;
+
+/**
+ * `jose` remplace `jsonwebtoken`.
+ *
+ * `jsonwebtoken@9` dépend de `jws` → `jwa` → `buffer-equal-constant-time`, qui
+ * utilise `SlowBuffer`. Cette API a été retirée de Node : la bibliothèque lève
+ * une TypeError au chargement sur les versions récentes, et sa chaîne de
+ * dépendances n'est plus maintenue. `jose` s'appuie sur WebCrypto natif et
+ * n'embarque aucune dépendance.
+ */
+const secretKey = () => new TextEncoder().encode(process.env.TOKEN_SECRET);
+
+const verifyToken = async (token) => {
+  const { payload } = await jwtVerify(token, secretKey());
+  return payload;
 };
 
-module.exports.requireAuth = (req, res, next) => {
-  const token = req.cookies.jwt;
-  if (token) {
-    jwt.verify(token, process.env.TOKEN_SECRET, async (err, decodedToken) => {
-      if (err) {
-        console.log(err);
-        res.send(200).json('no token')
-      } else {
-        console.log(decodedToken.id);
-        next();
-      }
-    });
-  } else {
-    console.log('No token');
+const findSessionUser = (id) =>
+  prisma.user.findUnique({
+    where: { id },
+    select: { ...publicUser, isAdmin: true },
+  });
+
+/**
+ * Renseigne res.locals.user lorsqu'un jeton valide accompagne la requête.
+ * Ne bloque jamais : sert aux routes publiques qui adaptent leur réponse
+ * selon qu'un visiteur est connecté ou non.
+ */
+module.exports.checkUser = async (req, res, next) => {
+  res.locals.user = null;
+
+  const token = readToken(req);
+  if (!token) return next();
+
+  try {
+    const { id } = await verifyToken(token);
+    res.locals.user = await findSessionUser(id);
+  } catch (err) {
+    res.clearCookie('jwt');
+  }
+
+  return next();
+};
+
+/**
+ * Exige un jeton valide ET un utilisateur toujours présent en base.
+ * Seule source d'identité autorisée pour les opérations d'écriture :
+ * res.locals.user.id. Aucun identifiant transmis par le client n'est
+ * considéré comme fiable.
+ */
+module.exports.requireAuth = async (req, res, next) => {
+  const token = readToken(req);
+
+  if (!token) {
+    return res.status(401).json({ message: 'Authentification requise.' });
+  }
+
+  try {
+    const { id } = await verifyToken(token);
+    const user = await findSessionUser(id);
+
+    // Un jeton peut rester valide après la suppression du compte.
+    if (!user) {
+      res.clearCookie('jwt');
+      return res.status(401).json({ message: 'Session invalide.' });
+    }
+
+    res.locals.user = user;
+    return next();
+  } catch (err) {
+    res.clearCookie('jwt');
+    return res.status(401).json({ message: 'Session expirée ou invalide.' });
   }
 };
