@@ -6,15 +6,15 @@ import { nouvelAtelier, ouvrirCarnet, sInscrire } from './helpers';
 /**
  * Vérifications d'accessibilité.
  *
- * axe-core ne détecte qu'une partie des problèmes réels — de l'ordre de
+ * axe-core ne détecte qu'une partie des problèmes réels - de l'ordre de
  * quarante pour cent selon ses propres auteurs. Il attrape en revanche
  * infailliblement les régressions mécaniques : un contraste insuffisant après
  * un changement de palette, un champ dont le label a été détaché, un bouton
  * réduit à une icône sans nom accessible. C'est précisément ce qui se casse
  * sans qu'on s'en aperçoive.
  *
- * Les vérifications qu'axe ne sait pas faire — l'ordre de tabulation, la
- * pertinence d'un intitulé — sont couvertes par les tests au clavier ci-dessous.
+ * Les vérifications qu'axe ne sait pas faire - l'ordre de tabulation, la
+ * pertinence d'un intitulé - sont couvertes par les tests au clavier ci-dessous.
  */
 async function analyser(page: Page) {
   return new AxeBuilder({ page })

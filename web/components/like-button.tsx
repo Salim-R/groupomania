@@ -12,7 +12,7 @@ import { useSession } from '@/components/session-provider';
  * vient des propriétés, donc du serveur : quand `revalidatePath` a réévalué la
  * page, l'état optimiste est abandonné et remplacé par la valeur réelle. En cas
  * d'échec, rien n'ayant changé côté serveur, l'affichage revient de lui-même à
- * son état d'origine — aucun retour arrière à écrire.
+ * son état d'origine - aucun retour arrière à écrire.
  *
  * Le compteur reste visible pour un visiteur non connecté, mais le bouton est
  * désactivé et explique pourquoi plutôt que d'échouer silencieusement.

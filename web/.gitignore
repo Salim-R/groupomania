@@ -41,3 +41,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Fichiers de configuration d'outillage, propres au poste de travail
+CLAUDE.md
+AGENTS.md

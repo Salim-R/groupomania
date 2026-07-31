@@ -10,7 +10,7 @@ import { projects } from '@/lib/queries';
  * La page n'attend rien : l'accroche et la structure partent immédiatement,
  * et la grille arrive en flux dès que l'API a répondu. Sans cette frontière de
  * suspension, le visiteur resterait devant une page blanche pendant toute la
- * durée de la requête, aussi courte soit-elle — et elle ne l'est pas toujours,
+ * durée de la requête, aussi courte soit-elle - et elle ne l'est pas toujours,
  * l'API étant hébergée séparément.
  */
 async function ProjectGrid() {

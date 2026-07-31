@@ -31,7 +31,7 @@
    *
    * La teinte d'origine (#b4703a) était trop claire : 3,92:1 sur le papier et
    * 3,95:1 sous du texte blanc, là où WCAG AA exige 4,5:1. Le défaut ne se voit
-   * pas à l'œil sur un écran de bureau bien réglé — c'est un audit automatisé
+   * pas à l'œil sur un écran de bureau bien réglé - c'est un audit automatisé
    * qui l'a relevé. La teinte retenue atteint 5,4:1 sur le papier et 5,7:1 avec
    * du blanc.
    */
