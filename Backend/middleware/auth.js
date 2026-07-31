@@ -41,7 +41,7 @@ module.exports.checkUser = async (req, res, next) => {
   try {
     const { id } = await verifyToken(token);
     res.locals.user = await findSessionUser(id);
-  } catch (err) {
+  } catch {
     res.clearCookie('jwt');
   }
 
@@ -73,7 +73,7 @@ module.exports.requireAuth = async (req, res, next) => {
 
     res.locals.user = user;
     return next();
-  } catch (err) {
+  } catch {
     res.clearCookie('jwt');
     return res.status(401).json({ message: 'Session expirée ou invalide.' });
   }

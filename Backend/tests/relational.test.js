@@ -236,7 +236,6 @@ describe('Fil des carnets', () => {
 
   it('pagine par curseur sans doublon ni saut', async () => {
     for (let i = 1; i <= 5; i += 1) {
-      // eslint-disable-next-line no-await-in-loop
       await createProject(artisan.cookie, `Projet ${i}`);
     }
 

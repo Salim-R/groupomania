@@ -51,30 +51,27 @@ app.use(cookieParser());
  * Limitation de débit sur l'authentification : sans elle, rien n'empêche
  * d'essayer des mots de passe en boucle.
  *
- * Désactivée en test : la suite crée plusieurs comptes par cas et atteindrait
- * le plafond, ce qui ferait échouer des tests pour une raison sans rapport
- * avec ce qu'ils vérifient. La limite est couverte par son propre test, qui
- * la réactive explicitement.
+ * Le plafond se règle par `AUTH_RATE_LIMIT`, et la valeur 0 désactive la
+ * protection. Les défauts diffèrent selon l'environnement pour une raison
+ * pratique : une suite de tests crée un ou deux comptes par cas et atteindrait
+ * autrement la limite, faisant échouer des tests pour une raison étrangère à
+ * ce qu'ils vérifient. Relever le plafond hors production garde la protection
+ * en place plutôt que de l'effacer, et `tests/rate-limit.test.js` l'exerce en
+ * fixant explicitement sa propre valeur.
  */
-if (process.env.NODE_ENV !== 'test') {
-  /**
-   * Le plafond est paramétrable et volontairement plus haut hors production.
-   *
-   * Une suite de bout en bout crée un compte par scénario et atteint sinon la
-   * limite au bout de quelques minutes : les tests échouent alors sur un 429
-   * sans rapport avec ce qu'ils vérifient. Relever le plafond en développement
-   * garde la protection en place et testable, plutôt que de la désactiver et
-   * de ne plus jamais l'exercer avant la mise en production.
-   */
-  const limit =
-    Number.parseInt(process.env.AUTH_RATE_LIMIT, 10) ||
-    (process.env.NODE_ENV === 'production' ? 20 : 500);
+const PLAFONDS_PAR_DEFAUT = { production: 20, test: 0 };
 
+const plafondDeclare = Number.parseInt(process.env.AUTH_RATE_LIMIT, 10);
+const plafond = Number.isNaN(plafondDeclare)
+  ? PLAFONDS_PAR_DEFAUT[process.env.NODE_ENV] ?? 500
+  : plafondDeclare;
+
+if (plafond > 0) {
   app.use(
     ['/api/user/login', '/api/user/register'],
     rateLimit({
       windowMs: 15 * 60 * 1000,
-      limit,
+      limit: plafond,
       standardHeaders: 'draft-7',
       legacyHeaders: false,
       message: { message: 'Trop de tentatives. Réessayez dans quelques minutes.' },

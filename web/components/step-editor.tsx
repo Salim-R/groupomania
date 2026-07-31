@@ -50,8 +50,8 @@ export function StepEditor({
   // seulement d'afficher une interface qui ne servirait à rien.
   if (!isMe(authorId)) return null;
 
-  // `revalidatePath` invalide le cache de la route, mais seul un rafraîchisse-
-  // ment explicite redemande la page : une soumission de formulaire le fait
+  // `revalidatePath` invalide le cache de la route, mais seule une nouvelle
+  // demande redemande la page : une soumission de formulaire s'en charge
   // d'elle-même, un appel d'action déclenché à la main non.
   const move = (step: Step, direction: -1 | 1) => {
     startMoving(async () => {

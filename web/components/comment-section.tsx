@@ -47,11 +47,11 @@ export function CommentSection({
     startTransition(async () => {
       await deleteCommentAction(projectId, commentId);
 
-      // `revalidatePath` invalide le cache de la route ; encore faut-il que le
-      // routeur redemande la page. Une soumission de formulaire le fait d'elle-
-      // même, un appel d'action déclenché à la main non : sans ce rafraîchis-
-      // sement, le commentaire supprimé resterait affiché jusqu'à la prochaine
-      // navigation.
+      // `revalidatePath` invalide le cache de la route ; encore faut-il que
+      // le routeur redemande la page. Une soumission de formulaire s'en
+      // charge d'elle-même, un appel d'action déclenché à la main non. Sans
+      // cet appel, le commentaire supprimé resterait affiché jusqu'à la
+      // prochaine navigation.
       router.refresh();
     });
   };

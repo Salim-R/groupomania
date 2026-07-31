@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 const prisma = require('../lib/prisma');
 const { generateImage } = require('../scripts/demo-images');
 

@@ -33,6 +33,10 @@ jobs:
       # propre PostgreSQL embarqué, exactement comme en local. La vérification
       # tourne donc sur le même moteur que la production, sans conteneur à
       # configurer ni divergence entre les deux environnements.
+      - name: Analyse statique
+        working-directory: Backend
+        run: npm run lint
+
       - name: Tests
         working-directory: Backend
         env:

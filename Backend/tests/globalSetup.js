@@ -41,7 +41,7 @@ module.exports = async () => {
 
   try {
     await pg.createDatabase(DATABASE);
-  } catch (err) {
+  } catch {
     // La base survit parfois à une interruption brutale de la suite précédente.
   }
 
