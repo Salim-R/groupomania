@@ -91,10 +91,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # Ce travail installe les deux moitiés du dépôt, il déclare donc les deux
+      # fichiers de verrouillage. Sans ce chemin explicite, `setup-node` cherche
+      # un verrou à la racine, où il n'y en a pas : la racine du monorepo n'est
+      # pas un projet npm.
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
+          cache-dependency-path: |
+            Backend/package-lock.json
+            web/package-lock.json
 
       - name: Installer l'API
         working-directory: Backend
