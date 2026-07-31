@@ -7,8 +7,16 @@ const { z } = require('zod');
  * arrive. Sans cette couche, un corps de requête malformé produit une erreur
  * de base de données renvoyée en 500 plutôt qu'un 400 explicite.
  *
- * Ces schémas sont la source unique des règles de saisie : le front les
- * réutilisera pour valider avant l'envoi, sans les réécrire.
+ * Ces schémas font autorité : le client pose bien des attributs `maxLength` et
+ * `required` sur ses champs, mais ce sont des indications d'interface, que
+ * n'importe qui contourne en envoyant la requête directement. Rien n'est admis
+ * en base sans être passé par ici.
+ *
+ * Les deux applications étant déployées séparément, elles ne partagent pas ce
+ * fichier. Les bornes sont donc écrites deux fois, et un écart entre les deux
+ * se traduit par un champ refusé après envoi plutôt que signalé à la saisie.
+ * Les mutualiser demanderait un paquet commun, c'est-à-dire un dépôt outillé
+ * pour en publier un.
  */
 
 const trimmed = (schema) => z.preprocess((v) => (typeof v === 'string' ? v.trim() : v), schema);

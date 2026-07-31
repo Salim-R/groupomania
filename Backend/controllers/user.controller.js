@@ -138,6 +138,16 @@ exports.unfollow = async (req, res, next) => {
   const followingId = req.params.id;
 
   try {
+    // Symétrie avec `follow` : `deleteMany` réussit sur zéro ligne, donc sur un
+    // artisan qui n'existe pas. Sans cette vérification, la même adresse
+    // répondrait 404 à l'abonnement et 200 au désabonnement.
+    const cible = await prisma.user.findUnique({
+      where: { id: followingId },
+      select: { id: true },
+    });
+
+    if (!cible) return res.status(404).json({ message: 'Artisan introuvable.' });
+
     await prisma.follow.deleteMany({ where: { followerId, followingId } });
 
     const user = await prisma.user.findUnique({

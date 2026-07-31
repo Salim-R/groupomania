@@ -356,6 +356,20 @@ describe('Cohérence des adresses imbriquées', () => {
     expect(inchange.text).toBe('Texte initial');
   });
 
+  it('répond 404 des deux côtés de l’abonnement quand l’artisan est inconnu', async () => {
+    const inconnu = 'clw000000000000000000000';
+
+    const abonnement = await request(app)
+      .put(`/api/user/${inconnu}/follow`)
+      .set('Cookie', alice.cookie);
+
+    const retrait = await request(app)
+      .delete(`/api/user/${inconnu}/follow`)
+      .set('Cookie', alice.cookie);
+
+    expect([abonnement.status, retrait.status]).toEqual([404, 404]);
+  });
+
   it('répond 404 des deux côtés du vote quand le projet est inconnu', async () => {
     const inconnu = 'clw000000000000000000000';
 
