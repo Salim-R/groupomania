@@ -88,7 +88,14 @@ export async function callApi<T>(
       cache: 'no-store',
     });
   } catch {
-    return { ok: false, message: "Le service est injoignable. L'API est-elle démarrée ?" };
+    // Message rédigé pour un visiteur, pas pour celui qui développe. L'API de
+    // démonstration est hébergée sur une offre gratuite qui met le service en
+    // veille : le premier appel après une période creuse échoue le temps du
+    // réveil, et la seule action utile est de réessayer.
+    return {
+      ok: false,
+      message: 'Le service ne répond pas pour le moment. Merci de réessayer dans un instant.',
+    };
   }
 
   await forwardSessionCookie(response);
