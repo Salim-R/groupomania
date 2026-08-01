@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
-import { signOutAction } from '@/app/actions/auth';
 import { Avatar } from '@/components/avatar';
 import { useSession } from '@/components/session-provider';
 
@@ -64,8 +63,11 @@ export function SiteHeader() {
               </Link>
 
               {/* Un formulaire plutôt qu'un bouton avec gestionnaire de clic :
-                  la déconnexion aboutit même sans JavaScript. */}
-              <form action={signOutAction}>
+                  la déconnexion aboutit même sans JavaScript. Il vise un
+                  gestionnaire de route, qui répond une redirection HTTP : le
+                  document est rechargé entièrement, et l'en-tête ne peut donc
+                  pas rester sur la session précédente. Voir app/deconnexion. */}
+              <form action="/deconnexion" method="post">
                 <button
                   type="submit"
                   className="text-ink-muted transition-colors hover:text-ink"

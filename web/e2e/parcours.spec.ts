@@ -92,3 +92,22 @@ test.describe("Parcours d'un atelier", () => {
     expect(messageCompteConnu).toBe(messageCompteInconnu);
   });
 });
+
+test('propose la connexion plutôt qu’un bouton mort au visiteur anonyme', async ({ page }) => {
+  await page.goto('/');
+
+  // Un visiteur non connecté doit pouvoir atteindre l'invitation au clavier :
+  // un bouton désactivé n'est pas focalisable, et l'explication qu'il porterait
+  // dans un `title` resterait donc hors de portée.
+  const premierCarnet = page.getByRole('heading', { level: 2 }).first();
+  await premierCarnet.click();
+
+  const invitation = page.getByRole('link', { name: /Connectez-vous pour apprécier/ });
+
+  await expect(invitation).toBeVisible();
+  await invitation.focus();
+  await expect(invitation).toBeFocused();
+
+  await invitation.click();
+  await expect(page.getByRole('heading', { level: 1, name: /Se connecter/i })).toBeVisible();
+});

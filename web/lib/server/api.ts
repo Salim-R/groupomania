@@ -112,9 +112,3 @@ export async function callApi<T>(
 
   return { ok: true, data: payload as T };
 }
-
-/** Supprime le cookie de session côté navigateur. */
-export async function clearSessionCookie() {
-  const store = await cookies();
-  store.delete('jwt');
-}

@@ -1,9 +1,13 @@
 'use client';
 
+import Link from 'next/link';
 import { useOptimistic, useTransition } from 'react';
 
 import { toggleLikeAction } from '@/app/actions/projects';
 import { useSession } from '@/components/session-provider';
+
+const habillage =
+  'inline-flex items-center gap-2 rounded-md border px-3 py-1.5 text-sm transition-colors';
 
 /**
  * Bouton « j'aime » à mise à jour optimiste.
@@ -14,8 +18,10 @@ import { useSession } from '@/components/session-provider';
  * d'échec, rien n'ayant changé côté serveur, l'affichage revient de lui-même à
  * son état d'origine - aucun retour arrière à écrire.
  *
- * Le compteur reste visible pour un visiteur non connecté, mais le bouton est
- * désactivé et explique pourquoi plutôt que d'échouer silencieusement.
+ * Un visiteur non connecté ne reçoit pas un bouton désactivé mais un lien vers
+ * la page de connexion : un contrôle désactivé n'est pas focusable, si bien
+ * qu'au clavier l'explication portée par son `title` reste inaccessible. Le
+ * lien, lui, s'annonce, se focalise, et mène là où il faut aller.
  */
 export function LikeButton({
   projectId,
@@ -48,14 +54,26 @@ export function LikeButton({
 
   const label = optimistic.liked ? 'Retirer mon appréciation' : 'Marquer comme apprécié';
 
+  if (!isAuthenticated) {
+    return (
+      <Link
+        href="/connexion"
+        className={`${habillage} border-rule-strong text-ink-muted hover:text-ink`}
+      >
+        <span aria-hidden="true">☆</span>
+        <span>Connectez-vous pour apprécier</span>
+        <span className="font-medium tabular-nums">{count}</span>
+      </Link>
+    );
+  }
+
   return (
     <button
       type="button"
       onClick={toggle}
-      disabled={!isAuthenticated || pending}
+      disabled={pending}
       aria-pressed={optimistic.liked}
-      title={isAuthenticated ? undefined : 'Connectez-vous pour apprécier un carnet.'}
-      className={`inline-flex items-center gap-2 rounded-md border px-3 py-1.5 text-sm transition-colors disabled:cursor-not-allowed ${
+      className={`${habillage} disabled:cursor-not-allowed ${
         optimistic.liked
           ? 'border-brass bg-brass-wash text-brass-strong'
           : 'border-rule-strong text-ink-muted hover:text-ink'

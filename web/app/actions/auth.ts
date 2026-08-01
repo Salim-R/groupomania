@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
-import { callApi, clearSessionCookie } from '@/lib/server/api';
+import { callApi } from '@/lib/server/api';
 import type { CurrentUser, FieldErrors } from '@/lib/types';
 
 export interface AuthFormState {
@@ -97,11 +97,4 @@ export async function signUpAction(
 
   oublierLaSession();
   redirect(safeRedirect(formData.get('suite')));
-}
-
-export async function signOutAction() {
-  await callApi('/api/user/logout', { method: 'GET' });
-  await clearSessionCookie();
-  oublierLaSession();
-  redirect('/');
 }
