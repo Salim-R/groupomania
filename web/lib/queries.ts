@@ -1,37 +1,39 @@
 import { api } from './api';
-import type {
-  Comment,
-  CurrentUser,
-  LikeState,
-  Page,
-  ProjectCard,
-  ProjectDetail,
-  Step,
-  UserProfile,
-} from './types';
+import type { CurrentUser, Page, ProjectCard, ProjectDetail, UserProfile } from './types';
 
 /**
- * Accès à l'API, regroupés par ressource.
+ * Lectures de l'API, regroupées par ressource.
  *
- * Les composants n'écrivent jamais de chemin en dur : une route qui change se
- * corrige ici seulement, et le typage garantit que l'appelant reçoit ce qu'il
- * attend.
+ * Ce module ne couvre que les lectures, et c'est délibéré. Les deux familles
+ * d'appels n'ont pas le même contrat d'erreur :
+ *
+ *  - une lecture est faite par un composant serveur pendant le rendu. Elle lève
+ *    une `ApiError`, que la page traduit en `notFound()` ou laisse remonter à la
+ *    frontière d'erreur. C'est ce que fait ce module.
+ *  - une écriture est faite par une Server Action attachée à un formulaire. Elle
+ *    ne doit rien lever : un envoi refusé se raconte dans l'état du formulaire,
+ *    sous le champ fautif, pas par une page d'erreur. Elle passe donc par
+ *    `lib/server/api.ts`, qui renvoie un résultat au lieu de jeter.
+ *
+ * Les envelopper toutes ici imposerait à chaque appelant de rattraper une
+ * exception pour la reconvertir en état de formulaire, ce qui reviendrait à
+ * écrire deux fois la même conversion.
  */
 
 export const auth = {
-  register: (body: { pseudo: string; email: string; password: string }) =>
-    api.post<{ user: CurrentUser }>('/api/user/register', body),
-
-  login: (body: { email: string; password: string }) =>
-    api.post<{ user: CurrentUser }>('/api/user/login', body),
-
-  logout: () => api.get<{ message: string }>('/api/user/logout'),
-
   me: () => api.get<CurrentUser>('/api/user/me'),
 };
 
 export const projects = {
-  list: (params: { limit?: number; cursor?: string; craft?: string; city?: string; author?: string } = {}) => {
+  list: (
+    params: {
+      limit?: number;
+      cursor?: string;
+      craft?: string;
+      city?: string;
+      author?: string;
+    } = {}
+  ) => {
     const query = new URLSearchParams();
     for (const [key, value] of Object.entries(params)) {
       if (value !== undefined && value !== '') query.set(key, String(value));
@@ -41,44 +43,6 @@ export const projects = {
   },
 
   one: (id: string) => api.get<ProjectDetail>(`/api/project/${id}`),
-
-  create: (body: FormData | { title: string; summary?: string }) =>
-    api.post<ProjectCard>('/api/project', body),
-
-  update: (id: string, body: { title?: string; summary?: string; status?: string }) =>
-    api.put<ProjectCard>(`/api/project/${id}`, body),
-
-  remove: (id: string) => api.delete<{ message: string }>(`/api/project/${id}`),
-
-  like: (id: string) => api.put<LikeState>(`/api/project/${id}/like`),
-
-  unlike: (id: string) => api.delete<LikeState>(`/api/project/${id}/like`),
-};
-
-export const steps = {
-  add: (projectId: string, body: FormData | { title: string; body?: string }) =>
-    api.post<Step>(`/api/project/${projectId}/steps`, body),
-
-  update: (projectId: string, stepId: string, body: FormData | { title: string; body?: string }) =>
-    api.put<Step>(`/api/project/${projectId}/steps/${stepId}`, body),
-
-  remove: (projectId: string, stepId: string) =>
-    api.delete<{ message: string }>(`/api/project/${projectId}/steps/${stepId}`),
-
-  /** Renvoie la liste complète réordonnée, pas seulement l'étape déplacée. */
-  move: (projectId: string, stepId: string, position: number) =>
-    api.patch<Step[]>(`/api/project/${projectId}/steps/${stepId}/position`, { position }),
-};
-
-export const comments = {
-  add: (projectId: string, text: string) =>
-    api.post<Comment>(`/api/project/${projectId}/comments`, { text }),
-
-  update: (projectId: string, commentId: string, text: string) =>
-    api.put<Comment>(`/api/project/${projectId}/comments/${commentId}`, { text }),
-
-  remove: (projectId: string, commentId: string) =>
-    api.delete<{ message: string }>(`/api/project/${projectId}/comments/${commentId}`),
 };
 
 export const users = {
@@ -92,13 +56,4 @@ export const users = {
   },
 
   profile: (id: string) => api.get<UserProfile>(`/api/user/${id}`),
-
-  update: (id: string, body: { bio?: string; craft?: string | null; city?: string | null }) =>
-    api.put<CurrentUser>(`/api/user/${id}`, body),
-
-  follow: (id: string) => api.put<UserProfile>(`/api/user/${id}/follow`),
-
-  unfollow: (id: string) => api.delete<UserProfile>(`/api/user/${id}/follow`),
-
-  picture: (file: FormData) => api.post<CurrentUser>('/api/user/me/picture', file),
 };

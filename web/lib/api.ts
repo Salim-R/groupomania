@@ -30,9 +30,8 @@ export class ApiError extends Error {
   }
 }
 
-interface RequestOptions extends Omit<RequestInit, 'body'> {
-  body?: unknown;
-  /** Durée de mise en cache côté serveur, en secondes. 0 désactive le cache. */
+interface RequestOptions extends Omit<RequestInit, 'body' | 'method'> {
+  /** Durée de mise en cache côté serveur, en secondes. Absente, le cache est désactivé. */
   revalidate?: number;
 }
 
@@ -54,20 +53,26 @@ async function serverCookieHeader(): Promise<Record<string, string>> {
   return jwt ? { Cookie: `jwt=${jwt.value}` } : {};
 }
 
-export async function apiFetch<T>(path: string, options: RequestOptions = {}): Promise<T> {
-  const { body, revalidate, headers, ...rest } = options;
-
-  const isFormData = typeof FormData !== 'undefined' && body instanceof FormData;
+/**
+ * Lecture de l'API.
+ *
+ * Ce client ne sait que lire, et c'est le pendant de `lib/queries.ts` : toute
+ * écriture passe par une Server Action et `lib/server/api.ts`, qui renvoie un
+ * résultat plutôt que de lever, parce qu'un envoi refusé se raconte dans l'état
+ * du formulaire. Conserver ici des verbes mutants laisserait croire à un second
+ * chemin d'écriture, avec un contrat d'erreur différent.
+ */
+async function apiFetch<T>(path: string, options: RequestOptions = {}): Promise<T> {
+  const { revalidate, headers, ...rest } = options;
 
   const response = await fetch(`${API_URL}${path}`, {
     ...rest,
+    method: 'GET',
     credentials: 'include',
     headers: {
-      ...(isFormData ? {} : body !== undefined ? { 'Content-Type': 'application/json' } : {}),
       ...(await serverCookieHeader()),
       ...headers,
     },
-    body: isFormData ? (body as FormData) : body !== undefined ? JSON.stringify(body) : undefined,
     // Les données d'un carnet changent à chaque étape publiée : pas de cache
     // par défaut, et une durée explicite là où elle se justifie.
     ...(revalidate === undefined ? { cache: 'no-store' as const } : { next: { revalidate } }),
@@ -89,16 +94,7 @@ export async function apiFetch<T>(path: string, options: RequestOptions = {}): P
 }
 
 export const api = {
-  get: <T>(path: string, options?: RequestOptions) =>
-    apiFetch<T>(path, { ...options, method: 'GET' }),
-  post: <T>(path: string, body?: unknown, options?: RequestOptions) =>
-    apiFetch<T>(path, { ...options, method: 'POST', body }),
-  put: <T>(path: string, body?: unknown, options?: RequestOptions) =>
-    apiFetch<T>(path, { ...options, method: 'PUT', body }),
-  patch: <T>(path: string, body?: unknown, options?: RequestOptions) =>
-    apiFetch<T>(path, { ...options, method: 'PATCH', body }),
-  delete: <T>(path: string, options?: RequestOptions) =>
-    apiFetch<T>(path, { ...options, method: 'DELETE' }),
+  get: <T>(path: string, options?: RequestOptions) => apiFetch<T>(path, options),
 };
 
 /** Résout le chemin d'une image déposée en URL absolue servie par l'API. */

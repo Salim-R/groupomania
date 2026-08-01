@@ -4,7 +4,7 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
 import { callApi } from '@/lib/server/api';
-import type { Comment, FieldErrors, ProjectCard, Step } from '@/lib/types';
+import type { Comment, FieldErrors, LikeState, ProjectCard, Step } from '@/lib/types';
 
 export interface FormState {
   errors?: FieldErrors;
@@ -111,7 +111,7 @@ export async function deleteCommentAction(projectId: string, commentId: string) 
 }
 
 export async function toggleLikeAction(projectId: string, liked: boolean) {
-  const result = await callApi<{ likes: number; likedByMe: boolean }>(
+  const result = await callApi<LikeState>(
     `/api/project/${projectId}/like`,
     { method: liked ? 'PUT' : 'DELETE' }
   );
