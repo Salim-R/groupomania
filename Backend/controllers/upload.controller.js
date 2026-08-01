@@ -19,7 +19,7 @@ exports.uploadProfil = async (req, res, next) => {
   try {
     picture = await storeImage(req.file, 'profils');
   } catch (err) {
-    return res.status(400).json({ errors: uploadErrors(err) });
+    return res.status(400).json({ errors: uploadErrors(err, 'file') });
   }
 
   try {

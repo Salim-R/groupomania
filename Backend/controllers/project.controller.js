@@ -108,7 +108,7 @@ exports.createProject = async (req, res, next) => {
     try {
       coverImage = await storeImage(req.file, 'projects');
     } catch (err) {
-      return res.status(400).json({ errors: uploadErrors(err) });
+      return res.status(400).json({ errors: uploadErrors(err, 'cover') });
     }
   }
 

@@ -63,3 +63,24 @@ describe('Écriture des images déposées', () => {
     expect(path.basename(chemin, '.png')).toMatch(/^[0-9a-f-]{36}$/);
   });
 });
+
+describe('Messages d’erreur des dépôts', () => {
+  const { uploadErrors } = require('../utils/errors.utils');
+
+  it.each([
+    ['invalid file', /Format incompatible/],
+    ['max size', /dépasse 5 Mo/],
+  ])('indexe le message de « %s » sous le nom du champ', (code, attendu) => {
+    const errors = uploadErrors(new Error(code), 'cover');
+
+    // La clé doit être le nom du champ du formulaire : c'est là que le client
+    // va chercher l'erreur pour l'afficher, comme il le fait pour Zod.
+    expect(Object.keys(errors)).toEqual(['cover']);
+    expect(errors.cover).toMatch(attendu);
+  });
+
+  it('reste exploitable sur une erreur imprévue', () => {
+    expect(uploadErrors(new Error('autre chose'), 'image').image).toBeTruthy();
+    expect(uploadErrors(undefined, 'image').image).toBeTruthy();
+  });
+});

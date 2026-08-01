@@ -45,7 +45,7 @@ exports.addStep = async (req, res, next) => {
       try {
         image = await storeImage(req.file, 'steps');
       } catch (err) {
-        return res.status(400).json({ errors: uploadErrors(err) });
+        return res.status(400).json({ errors: uploadErrors(err, 'image') });
       }
     }
 
@@ -100,7 +100,7 @@ exports.updateStep = async (req, res, next) => {
       try {
         image = await storeImage(req.file, 'steps');
       } catch (err) {
-        return res.status(400).json({ errors: uploadErrors(err) });
+        return res.status(400).json({ errors: uploadErrors(err, 'image') });
       }
     }
 

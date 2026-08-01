@@ -1,48 +1,28 @@
-const getErrorMessage = (err, field, message) => {
-  if (err.message && err.message.includes(field)) return message;
-  return '';
-};
+/**
+ * Messages d'erreur des dépôts de fichiers.
+ *
+ * L'API indexe toutes ses erreurs par nom de champ : c'est la forme que `parse`
+ * produit à partir de Zod, et celle que le client va chercher pour l'afficher
+ * sous le champ fautif. Les dépôts doivent suivre la même convention, sans quoi
+ * le message existe côté serveur mais n'atteint jamais l'écran.
+ *
+ * Ce fichier contenait aussi `signUpErrors` et `signInErrors`, deux rescapés de
+ * la version MongoDB : ils inspectaient `err.code === 11000` et `err.keyValue`,
+ * qui n'existent pas sous Prisma. Plus aucun contrôleur ne les appelait, la
+ * violation d'unicité étant traitée par le code `P2002` dans
+ * `auth.controller.js`.
+ */
 
-const getDuplicateErrorMessage = (err, field, message) => {
-  if (err.code === 11000 && Object.keys(err.keyValue)[0].includes(field)) return message;
-  return '';
-};
+/**
+ * `storeImage` lève des erreurs dont le message tient lieu de code. Le
+ * rapprochement se fait donc sur ce message plutôt que sur une classe d'erreur,
+ * ce qui évite à `lib/upload.js` de dépendre de la couche de présentation.
+ */
+const MESSAGES = new Map([
+  ['invalid file', 'Format incompatible : JPEG, PNG ou WebP attendu.'],
+  ['max size', 'Le fichier dépasse 5 Mo.'],
+]);
 
-module.exports.signUpErrors = (err) => {
-  const errors = { pseudo: '', email: '', password: '' };
-
-  errors.pseudo =
-    getErrorMessage(err, 'pseudo', 'Pseudo incorrect ou déjà pris') ||
-    getDuplicateErrorMessage(err, 'pseudo', 'Ce pseudo est déjà pris');
-
-  errors.email =
-    getErrorMessage(err, 'email', 'Email incorrect') ||
-    getDuplicateErrorMessage(err, 'email', 'Cet email est déjà enregistré');
-
-  errors.password = getErrorMessage(
-    err,
-    'password',
-    'Le mot de passe doit faire 6 caractères minimum'
-  );
-
-  return errors;
-};
-
-module.exports.signInErrors = (err) => {
-  const errors = { email: '', password: '' };
-
-  errors.email = getErrorMessage(err, 'incorrect email', 'Email inconnu');
-  errors.password = getErrorMessage(err, 'incorrect password', 'Le mot de passe ne correspond pas');
-
-  return errors;
-};
-
-module.exports.uploadErrors = (err) => {
-  const errors = { format: '', maxSize: '' };
-
-  errors.format = getErrorMessage(err, 'invalid file', 'Format incompatible : JPEG, PNG ou WebP attendu');
-  // Le message annonçait 500 ko alors que la limite appliquée est de 5 Mo.
-  errors.maxSize = getErrorMessage(err, 'max size', 'Le fichier dépasse 5 Mo');
-
-  return errors;
-};
+module.exports.uploadErrors = (err, champ) => ({
+  [champ]: MESSAGES.get(err && err.message) ?? 'Ce fichier ne peut pas être déposé.',
+});
