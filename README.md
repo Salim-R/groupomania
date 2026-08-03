@@ -75,7 +75,7 @@ npm test
 
 `76 tests, 6 suites, 0 échec.`
 
-### Et treize tests de bout en bout, dont un à deux ateliers
+### Et quatorze tests de bout en bout, dont un à deux ateliers
 
 Playwright ouvre **deux contextes de navigateur simultanés**, chacun avec son propre magasin de cookies : deux sessions coexistent réellement, comme deux personnes devant deux machines.
 
