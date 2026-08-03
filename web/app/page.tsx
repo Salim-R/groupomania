@@ -58,20 +58,107 @@ async function ProjectGrid() {
 
 export default function HomePage() {
   return (
-    <div className="mx-auto max-w-5xl px-4 py-10">
-      <section className="mb-10 max-w-2xl">
-        <h1 className="font-display text-4xl leading-tight font-semibold text-balance text-ink sm:text-5xl">
-          Les projets prennent forme, étape par étape
-        </h1>
-        <p className="mt-4 text-lg text-pretty text-ink-muted">
-          Ébénistes, mécaniciens, céramistes ou luthiers partagent ici l&apos;avancement réel de
-          leur travail, des premiers gestes au résultat final.
-        </p>
+    <div>
+      <section className="border-b border-rule bg-paper-raised">
+        <div className="mx-auto grid max-w-5xl gap-10 px-4 py-14 lg:grid-cols-[1.15fr_0.85fr] lg:items-center lg:py-20">
+          <div>
+            <p className="text-sm font-semibold tracking-[0.18em] text-brass uppercase">
+              La preuve du geste
+            </p>
+            <h1 className="mt-4 max-w-3xl font-display text-5xl leading-[1.04] font-semibold text-balance text-ink sm:text-6xl">
+              Montrez le travail qu&apos;une photo finale ne raconte pas.
+            </h1>
+            <p className="mt-6 max-w-2xl text-lg leading-8 text-pretty text-ink-muted">
+              L&apos;Établi permet aux artisans de documenter un ouvrage étape par étape, puis de
+              partager une page claire qui montre la méthode, les choix et le savoir-faire.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <a
+                href="#projets"
+                className="rounded-md bg-brass px-5 py-3 font-semibold text-on-brass transition-colors hover:bg-brass-strong"
+              >
+                Explorer les projets
+              </a>
+              <a
+                href="/connexion"
+                className="rounded-md border border-rule-strong bg-paper px-5 py-3 font-semibold text-ink transition-colors hover:border-brass hover:text-brass-strong"
+              >
+                Tester l&apos;espace artisan
+              </a>
+            </div>
+          </div>
+
+          <aside className="relative overflow-hidden rounded-2xl border border-rule bg-paper p-6 shadow-card sm:p-8">
+            <div aria-hidden="true" className="absolute -top-16 -right-12 size-40 rounded-full bg-brass-wash" />
+            <p className="relative text-sm font-semibold text-brass-strong">Un projet, un lien, toute l&apos;histoire</p>
+            <ol className="relative mt-6 space-y-5">
+              {[
+                ['01', 'Lancer le projet', 'Un titre, une description et une première photo.'],
+                ['02', 'Ajouter les étapes', 'Les gestes, les décisions et les images restent dans l’ordre.'],
+                ['03', 'Partager l’avancement', 'Le client ou le public suit le travail depuis une page unique.'],
+              ].map(([number, title, text]) => (
+                <li key={number} className="grid grid-cols-[2.5rem_1fr] gap-3">
+                  <span className="font-display text-2xl font-semibold text-brass">{number}</span>
+                  <div>
+                    <h2 className="font-semibold text-ink">{title}</h2>
+                    <p className="mt-1 text-sm leading-6 text-ink-muted">{text}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </aside>
+        </div>
       </section>
 
-      <Suspense fallback={<ProjectGridSkeleton />}>
-        <ProjectGrid />
-      </Suspense>
+      <section className="mx-auto max-w-5xl px-4 py-12" aria-labelledby="benefices">
+        <div className="grid gap-4 sm:grid-cols-3">
+          {[
+            ['Documenter', 'Photos et étapes restent réunies dans le bon ordre.'],
+            ['Rassurer', 'La méthode de travail devient visible avant même le premier échange.'],
+            ['Partager', 'Une seule page remplace les photos dispersées dans les messages.'],
+          ].map(([title, text]) => (
+            <article key={title} className="rounded-xl border border-rule bg-paper-raised p-5">
+              <h2 id={title === 'Documenter' ? 'benefices' : undefined} className="font-display text-xl font-semibold text-ink">
+                {title}
+              </h2>
+              <p className="mt-2 text-sm leading-6 text-ink-muted">{text}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section id="projets" className="mx-auto max-w-5xl scroll-mt-24 px-4 pb-14">
+        <div className="mb-8 max-w-2xl">
+          <p className="text-sm font-semibold tracking-[0.18em] text-brass uppercase">Dans les ateliers</p>
+          <h2 className="mt-3 font-display text-3xl font-semibold text-balance text-ink sm:text-4xl">
+            Des ouvrages racontés pendant leur fabrication
+          </h2>
+          <p className="mt-3 text-ink-muted">
+            Forge, mécanique, ébénisterie, céramique ou lutherie : entrez dans le processus, pas seulement dans le résultat.
+          </p>
+        </div>
+
+        <Suspense fallback={<ProjectGridSkeleton />}>
+          <ProjectGrid />
+        </Suspense>
+      </section>
+
+      <section className="border-t border-rule bg-paper-raised">
+        <div className="mx-auto flex max-w-5xl flex-col gap-6 px-4 py-10 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p className="font-display text-2xl font-semibold text-ink">Essayez le parcours complet</p>
+            <p className="mt-2 text-sm text-ink-muted">
+              Compte de démonstration : margaux@exemple.fr · mot de passe : atelier2026
+            </p>
+          </div>
+          <a
+            href="/connexion"
+            className="w-fit rounded-md bg-brass px-5 py-3 font-semibold text-on-brass transition-colors hover:bg-brass-strong"
+          >
+            Ouvrir la démonstration
+          </a>
+        </div>
+      </section>
     </div>
   );
 }

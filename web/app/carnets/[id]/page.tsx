@@ -97,6 +97,21 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
             />
           </div>
         </div>
+
+        <dl className="mt-6 grid grid-cols-3 overflow-hidden rounded-xl border border-rule bg-paper-raised text-center shadow-card">
+          <div className="p-4">
+            <dt className="text-xs text-ink-faint">Étapes</dt>
+            <dd className="mt-1 font-display text-2xl font-semibold text-ink">{project.steps.length}</dd>
+          </div>
+          <div className="border-x border-rule p-4">
+            <dt className="text-xs text-ink-faint">Échanges</dt>
+            <dd className="mt-1 font-display text-2xl font-semibold text-ink">{project.comments.length}</dd>
+          </div>
+          <div className="p-4">
+            <dt className="text-xs text-ink-faint">Appréciations</dt>
+            <dd className="mt-1 font-display text-2xl font-semibold text-ink">{project._count.likes}</dd>
+          </div>
+        </dl>
       </header>
 
       {cover && (
@@ -119,10 +134,11 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
         </div>
       )}
 
-      <section aria-labelledby="titre-etapes" className="mt-10">
+      <section aria-labelledby="titre-etapes" className="mt-12">
         <h2 id="titre-etapes" className="font-display text-2xl font-semibold text-ink">
-          Le déroulé
+          L&apos;avancement du projet
         </h2>
+        <p className="mt-2 text-ink-muted">Chaque étape conserve les choix, les gestes et les images de fabrication.</p>
 
         {project.steps.length === 0 ? (
           <p className="mt-4 text-ink-muted">
@@ -131,15 +147,15 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
         ) : (
           // Une liste ordonnée : l'ordre porte du sens, ce n'est pas une simple
           // succession de blocs. Un lecteur d'écran annonce « 2 sur 5 ».
-          <ol className="mt-6 flex flex-col gap-8">
+          <ol className="relative mt-8 flex flex-col gap-10 before:absolute before:top-3 before:bottom-3 before:left-3.5 before:w-px before:bg-rule-strong">
             {project.steps.map((step) => {
               const image = mediaUrl(step.image);
 
               return (
-                <li key={step.id} className="relative ps-10">
+                <li key={step.id} className="relative ps-12">
                   <span
                     aria-hidden="true"
-                    className="absolute start-0 top-0 flex size-7 items-center justify-center rounded-full border border-rule-strong bg-paper-raised font-display text-sm text-ink-muted"
+                    className="absolute start-0 top-0 z-1 flex size-7 items-center justify-center rounded-full border border-brass bg-paper-raised font-display text-sm font-semibold text-brass-strong"
                   >
                     {step.position}
                   </span>

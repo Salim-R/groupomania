@@ -34,7 +34,7 @@ export function ProjectCard({
   const steps = project._count.steps;
 
   return (
-    <article className="group flex flex-col overflow-hidden rounded-lg border border-rule bg-paper-raised shadow-card transition-colors hover:border-rule-strong">
+    <article className="group flex h-full flex-col overflow-hidden rounded-xl border border-rule bg-paper-raised shadow-card transition-all duration-300 hover:-translate-y-1 hover:border-rule-strong hover:shadow-lg">
       <Link href={`/carnets/${project.id}`} className="flex flex-1 flex-col">
         <div className="relative aspect-[3/2] overflow-hidden bg-paper-sunken">
           {cover ? (
@@ -73,13 +73,17 @@ export function ProjectCard({
             </span>
           </div>
 
-          <h2 className="font-display text-lg leading-snug font-semibold text-ink">
+          <h2 className="font-display text-xl leading-snug font-semibold text-ink">
             {project.title}
           </h2>
 
           {project.summary && (
             <p className="line-clamp-2 text-sm text-ink-muted">{project.summary}</p>
           )}
+
+          <span className="mt-auto pt-3 text-sm font-semibold text-brass-strong">
+            Voir les étapes <span aria-hidden="true">→</span>
+          </span>
         </div>
       </Link>
 

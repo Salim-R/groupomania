@@ -23,11 +23,11 @@ const fraunces = Fraunces({
 
 export const metadata: Metadata = {
   title: {
-    default: "L'Établi · Projets d'artisans",
+    default: "L'Établi · Suivi de projets artisanaux",
     template: "%s · L'Établi",
   },
   description:
-    "Une plateforme où les artisans publient leurs projets étape par étape et montrent leur savoir-faire en images.",
+    "L'Établi permet aux artisans de documenter leurs ouvrages étape par étape et de partager leur savoir-faire depuis une page claire.",
   openGraph: {
     type: 'website',
     locale: 'fr_FR',
@@ -73,7 +73,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3">
               <p>
                 <span className="font-display font-semibold text-ink">L&apos;Établi</span> · projets
-                d&apos;artisans
+                documentés étape par étape
               </p>
               <p>Projet de démonstration, contenus fictifs.</p>
             </div>

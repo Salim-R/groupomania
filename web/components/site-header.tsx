@@ -7,8 +7,8 @@ import { Avatar } from '@/components/avatar';
 import { useSession } from '@/components/session-provider';
 
 const links = [
-  { href: '/', label: 'Les projets' },
-  { href: '/artisans', label: 'Les artisans' },
+  { href: '/', label: 'Découvrir' },
+  { href: '/artisans', label: 'Les ateliers' },
 ];
 
 export function SiteHeader() {
@@ -51,7 +51,7 @@ export function SiteHeader() {
                 href="/carnets/nouveau"
                 className="rounded-md bg-brass px-3 py-1.5 font-medium text-on-brass transition-colors hover:bg-brass-strong"
               >
-                Publier un projet
+                Nouveau projet
               </Link>
 
               <Link
@@ -85,7 +85,7 @@ export function SiteHeader() {
                 href="/inscription"
                 className="rounded-md bg-brass px-3 py-1.5 font-medium text-on-brass transition-colors hover:bg-brass-strong"
               >
-                Rejoindre
+                Créer un projet
               </Link>
             </>
           )}
