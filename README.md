@@ -13,7 +13,11 @@ Bout en bout 13 tests          0 violation WCAG 2.1 AA
 
 ## Démonstration en ligne
 
-**[letabli.vercel.app](https://letabli.vercel.app)** · API sur [letabli.onrender.com](https://letabli.onrender.com/health)
+API en ligne : [letabli.onrender.com](https://letabli.onrender.com/health)
+
+> L'adresse publique du client est en cours de rétablissement après un
+> renommage du projet. En attendant, le dépôt se lance en local en quelques
+> minutes : voir [Lancer le projet](#lancer-le-projet).
 
 Se connecter avec `margaux@exemple.fr` et le mot de passe `atelier2026` pour créer un carnet, ajouter des étapes et les réordonner. Tous les comptes de démonstration partagent ce mot de passe ; la liste complète est [plus bas](#comptes-de-démonstration).
 
