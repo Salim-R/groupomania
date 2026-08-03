@@ -8,7 +8,7 @@ const { generateImage } = require('../scripts/demo-images');
  * sont inventés. Les comptes partagent un mot de passe connu pour permettre
  * l'exploration.
  *
- * Les dates sont réparties sur trois mois : un fil dont tous les carnets
+ * Les dates sont réparties sur trois mois : un fil dont tous les projets
  * portent la même date ne permet pas de juger du tri, de la pagination ni de
  * la mise en forme des dates relatives.
  */
@@ -334,17 +334,10 @@ async function main() {
 
   let imageCount = 0;
 
-  // `palette` est retirée avant l'écriture : elle sert à composer les visuels,
+  // `palette` est retirée avant l'écriture : elle sert à choisir les photos,
   // ce n'est pas une colonne du modèle.
-  for (const [rank, { projects: projectList, palette, ...artisan }] of artisans.entries()) {
-    // Un atelier sur deux dépose une photo de profil : les deux cas d'affichage
-    // sont ainsi représentés, avec photo et avec l'initiale de repli.
-    const picture =
-      rank % 2 === 0
-        ? await generateImage({ palette, key: `avatar-${artisan.email}`, folder: 'profils' })
-        : null;
-
-    if (picture) imageCount += 1;
+  for (const { projects: projectList, palette, ...artisan } of artisans) {
+    const picture = null;
 
     const user = await prisma.user.create({
       data: { ...artisan, picture, password: PASSWORD },
@@ -378,7 +371,7 @@ async function main() {
                         folder: 'steps',
                       })
                     : null,
-                // Une étape par jour à partir de l'ouverture du carnet : le
+                // Une étape par jour à partir de l'ouverture du projet : le
                 // déroulé a une chronologie plausible.
                 createdAt: new Date(createdAt.getTime() + index * DAY),
               }))
@@ -391,7 +384,7 @@ async function main() {
       projectsByTitle.set(project.title, created);
     }
 
-    console.log(`  ${artisan.pseudo.padEnd(26)} ${projectList.length} carnet(s)`);
+    console.log(`  ${artisan.pseudo.padEnd(26)} ${projectList.length} projet(s)`);
   }
 
   // Les pseudos courts utilisés dans les commentaires sont résolus de façon
@@ -431,7 +424,7 @@ async function main() {
     followCount += 1;
   }
 
-  // Chaque carnet reçoit quelques votes d'ateliers qui ne sont pas le sien,
+  // Chaque projet reçoit quelques votes d'ateliers qui ne sont pas le sien,
   // en quantité variable pour que le classement ait du relief.
   const users = [...byPseudo.values()];
   let likeCount = 0;
@@ -446,7 +439,7 @@ async function main() {
   }
 
   console.log(
-    `\n${byPseudo.size} ateliers · ${projectsByTitle.size} carnets · ${commentCount} échanges · ${followCount} abonnements · ${likeCount} votes · ${imageCount} visuels générés`
+    `\n${byPseudo.size} ateliers · ${projectsByTitle.size} projets · ${commentCount} échanges · ${followCount} abonnements · ${likeCount} votes · ${imageCount} photos préparées`
   );
   console.log(`Mot de passe commun : ${PASSWORD}`);
 }

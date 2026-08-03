@@ -14,8 +14,6 @@ const inter = Inter({
   display: 'swap',
 });
 
-// Une serif à contraste marqué pour les titres : le carnet d'atelier plutôt
-// que le tableau de bord.
 const fraunces = Fraunces({
   variable: '--font-fraunces',
   subsets: ['latin'],
@@ -25,11 +23,11 @@ const fraunces = Fraunces({
 
 export const metadata: Metadata = {
   title: {
-    default: "L'Établi · Carnets d'atelier",
+    default: "L'Établi · Projets d'artisans",
     template: "%s · L'Établi",
   },
   description:
-    "Le carnet de bord public des artisans et des créateurs. Documentez un ouvrage étape par étape, montrez le travail plutôt que le résultat seul.",
+    "Une plateforme où les artisans publient leurs projets étape par étape et montrent leur savoir-faire en images.",
   openGraph: {
     type: 'website',
     locale: 'fr_FR',
@@ -74,8 +72,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <footer className="border-t border-rule px-4 py-8 text-sm text-ink-muted">
             <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3">
               <p>
-                <span className="font-display font-semibold text-ink">L&apos;Établi</span> · carnets
-                d&apos;atelier
+                <span className="font-display font-semibold text-ink">L&apos;Établi</span> · projets
+                d&apos;artisans
               </p>
               <p>Projet de démonstration, contenus fictifs.</p>
             </div>

@@ -12,7 +12,7 @@ export default function RegisterPage() {
     <div className="mx-auto max-w-md px-4 py-12">
       <h1 className="font-display text-3xl font-semibold text-ink">Ouvrir un atelier</h1>
       <p className="mt-2 mb-8 text-ink-muted">
-        Un compte suffit pour tenir vos carnets et les rendre publics.
+        Un compte suffit pour publier vos projets et montrer leur avancement.
       </p>
 
       <Suspense fallback={null}>

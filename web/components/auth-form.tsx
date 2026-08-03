@@ -60,7 +60,7 @@ export function AuthForm({ mode }: { mode: Mode }) {
           minLength={3}
           maxLength={55}
           defaultValue={state.values?.pseudo}
-          hint="Le nom sous lequel vos carnets seront signés."
+          hint="Le nom affiché sur vos projets."
           error={errors.pseudo}
         />
       )}

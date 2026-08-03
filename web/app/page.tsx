@@ -5,7 +5,7 @@ import { ProjectGridSkeleton } from '@/components/skeletons';
 import { projects } from '@/lib/queries';
 
 /**
- * Fil des carnets.
+ * Fil des projets.
  *
  * La page n'attend rien : l'accroche et la structure partent immédiatement,
  * et la grille arrive en flux dès que l'API a répondu. Sans cette frontière de
@@ -27,7 +27,7 @@ async function ProjectGrid() {
         role="status"
         className="rounded-lg border border-rule bg-alert-wash px-4 py-3 text-sm text-ink"
       >
-        Les carnets sont momentanément indisponibles. Réessayez dans un instant.
+        Les projets sont momentanément indisponibles. Réessayez dans un instant.
       </p>
     );
   }
@@ -35,9 +35,9 @@ async function ProjectGrid() {
   if (items.length === 0) {
     return (
       <div className="rounded-lg border border-dashed border-rule-strong px-6 py-16 text-center">
-        <p className="font-display text-xl text-ink">Aucun carnet pour l&apos;instant.</p>
+        <p className="font-display text-xl text-ink">Aucun projet pour l&apos;instant.</p>
         <p className="mt-2 text-ink-muted">
-          Les premiers ouvrages apparaîtront ici dès qu&apos;un atelier ouvrira son carnet.
+          Les premiers projets apparaîtront ici dès qu&apos;un atelier publiera son travail.
         </p>
       </div>
     );
@@ -61,11 +61,11 @@ export default function HomePage() {
     <div className="mx-auto max-w-5xl px-4 py-10">
       <section className="mb-10 max-w-2xl">
         <h1 className="font-display text-4xl leading-tight font-semibold text-balance text-ink sm:text-5xl">
-          Le carnet de bord des ateliers
+          Les projets prennent forme, étape par étape
         </h1>
         <p className="mt-4 text-lg text-pretty text-ink-muted">
-          Une table en chêne, une guitare, une réfection de moteur : chaque ouvrage se raconte étape
-          par étape. On y montre le travail, pas seulement le résultat.
+          Ébénistes, mécaniciens, céramistes ou luthiers partagent ici l&apos;avancement réel de
+          leur travail, des premiers gestes au résultat final.
         </p>
       </section>
 

@@ -304,7 +304,7 @@ exports.deleteComment = async (req, res, next) => {
     const userId = res.locals.user.id;
 
     // L'auteur du commentaire peut le retirer, l'auteur du projet aussi :
-    // c'est lui qui modère son carnet de bord.
+    // Le propriétaire du projet modère les contributions.
     if (comment.authorId !== userId && comment.project.authorId !== userId) {
       return res.status(403).json({ message: 'Suppression non autorisée.' });
     }

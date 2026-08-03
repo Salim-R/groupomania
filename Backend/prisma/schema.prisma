@@ -1,4 +1,4 @@
-// Établi - carnet de bord public pour artisans et créateurs.
+// L'Établi - suivi et partage de projets artisanaux.
 //
 // Le modèle précédent stockait les relations sous forme de tableaux de chaînes
 // dans le document utilisateur (followers, following, likes). Aucune intégrité
@@ -78,7 +78,7 @@ model Project {
   @@index([status])
 }
 
-/// Une étape du carnet de bord : une photo, un titre, quelques lignes.
+/// Une étape du projet : une photo, un titre et une description.
 model Step {
   id        String   @id @default(cuid())
 

@@ -1,7 +1,7 @@
 {
   "name": "etabli-api",
   "version": "2.0.0",
-  "description": "API de l'Établi : carnet de bord public pour artisans et créateurs.",
+  "description": "API de L'Établi : suivi et partage de projets artisanaux.",
   "main": "server.js",
   "author": "Salim Rhamoumi",
   "license": "UNLICENSED",

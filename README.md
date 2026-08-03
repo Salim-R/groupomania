@@ -1,6 +1,6 @@
 # L'Établi
 
-> Le carnet de bord public des artisans et des créateurs. Un ébéniste, un tatoueur, un mécanicien documente un ouvrage étape par étape : on y montre le travail, pas seulement le résultat.
+> Une application où les artisans publient l'avancement de leurs projets, étape par étape. Les visiteurs découvrent le travail en cours, les gestes et le résultat final.
 
 Application complète en deux parties : une API Node/Express sur PostgreSQL, et un client Next.js 16. Contenus de démonstration entièrement fictifs.
 
@@ -15,7 +15,7 @@ Bout en bout 14 tests          0 violation WCAG 2.1 AA
 
 **[letablicarnet.vercel.app](https://letablicarnet.vercel.app)** · API sur [letabli.onrender.com](https://letabli.onrender.com/health)
 
-Se connecter avec `margaux@exemple.fr` et le mot de passe `atelier2026` pour créer un carnet, ajouter des étapes et les réordonner. Tous les comptes de démonstration partagent ce mot de passe ; la liste complète est [plus bas](#comptes-de-démonstration).
+Se connecter avec `margaux@exemple.fr` et le mot de passe `atelier2026` pour créer un projet, ajouter des étapes et les réordonner. Tous les comptes de démonstration partagent ce mot de passe ; la liste complète est [plus bas](#comptes-de-démonstration).
 
 > L'API est hébergée sur une offre gratuite qui met le service en veille après quinze minutes sans trafic. **Le tout premier chargement peut donc prendre une minute**, le temps que l'instance se réveille. Les suivants sont immédiats.
 
@@ -162,7 +162,7 @@ Soit **88 % de réduction** sur le chemin le plus courant, avec repli propre. L'
 
 Deux durcissements de Next 16 ont été rencontrés au passage. L'optimiseur **refuse les hôtes résolvant vers une adresse privée**, protection contre le SSRF : sans elle, il peut servir de relais vers le réseau interne. L'exception est donc conditionnée à `NODE_ENV`, et la protection reste entière en production. Les **niveaux de qualité doivent être déclarés**, pour qu'une valeur arbitraire dans une URL ne fasse pas générer une infinité de variantes.
 
-Les 47 visuels de démonstration sont **générés, pas empruntés** : un SVG paramétré par matière - bois chaud, acier froid, calcaire clair - converti en JPEG, avec un grain léger parce qu'un dégradé pur se repère immédiatement comme un aplat artificiel. 692 Ko au total, non versionnés puisqu'ils se régénèrent.
+Les photos de démonstration sont stockées localement, puis recadrées et compressées pendant le seed. Elles ne dépendent donc d'aucun service externe au chargement. Les sources et les crédits sont documentés dans `Backend/demo-assets/README.md`.
 
 ### Streaming : la page part avant les données
 
@@ -316,11 +316,11 @@ Autant les écrire que les laisser découvrir :
 - L'état d'abonnement affiché sur une page de profil n'est pas encore renvoyé par l'API : le bouton part de l'état « non abonné » au premier rendu.
 - Les images de partage utilisent la police par défaut de Satori et non la serif du site. Charger une police personnalisée imposerait de versionner un fichier binaire ; l'écart a été jugé plus acceptable que la dépendance.
 - **axe-core ne détecte qu'une partie des problèmes d'accessibilité** - de l'ordre de quarante pour cent selon ses propres auteurs. Il attrape en revanche infailliblement les régressions mécaniques, ce qui est précisément ce qui se casse sans qu'on s'en aperçoive. Les vérifications qu'il ne sait pas faire, comme l'ordre de tabulation ou la pertinence d'un intitulé, sont couvertes par des tests au clavier dédiés.
-- **Le fil s'arrête aux douze premiers carnets.** L'API pagine par curseur et renvoie un `nextCursor`, que le client ne consomme pas : il n'y a ni bouton « voir plus » ni défilement infini. La capacité est donc réelle et testée côté serveur, mais inaccessible depuis l'écran tant que ce bouton n'existe pas.
+- **Le fil s'arrête aux douze premiers projets.** L'API pagine par curseur et renvoie un `nextCursor`, que le client ne consomme pas : il n'y a ni bouton « voir plus » ni défilement infini. La capacité est donc réelle et testée côté serveur, mais inaccessible depuis l'écran tant que ce bouton n'existe pas.
 - **Les photos d'étape n'ont pas de texte alternatif.** Elles sont servies en `alt=""`, faute de mieux : contrairement aux avatars, elles portent une information que le titre de l'étape ne restitue pas, mais aucune description n'est demandée au moment du dépôt. En fabriquer une à partir du titre reviendrait à répéter la ligne du dessus. La correction n'est pas cosmétique, c'est un champ `alt` sur `Step`, un champ de formulaire et la migration qui va avec.
 - Les tests de bout en bout ne couvrent que Chromium. Ajouter Firefox et WebKit est une ligne de configuration, mais triplerait la durée de la vérification pour un gain limité à ce stade.
 - **L'instance de démonstration se met en veille après quinze minutes sans trafic**, le plan gratuit de Render ne maintenant pas de processus permanent. Le premier appel après une veille attend le réveil, de l'ordre d'une minute. Un plan payant supprime le comportement sans changer une ligne de code.
-- **Les données de la démonstration sont réinitialisées à chaque déploiement.** Le seed tourne pendant le build, parce que c'est lui qui génère les visuels : les images vivent sur un système de fichiers éphémère, et les régénérer au même moment que les lignes correspondantes est la seule façon de garantir que la base ne référence pas un fichier absent. Conséquence assumée : un compte créé par un visiteur ne survit pas au déploiement suivant. Rendre les inscriptions persistantes suppose de sortir les fichiers vers un stockage objet, ce qui est un choix d'hébergement, pas une correction.
+- **Les données de la démonstration sont réinitialisées à chaque déploiement.** Le seed tourne pendant le build et prépare les photos au même moment que les lignes correspondantes. Conséquence assumée : un compte créé par un visiteur ne survit pas au déploiement suivant. Rendre les inscriptions persistantes suppose de sortir les fichiers vers un stockage objet, ce qui est un choix d'hébergement, pas une correction.
 
 ---
 

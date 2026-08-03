@@ -73,7 +73,7 @@ export function StepEditor({
       className="mt-12 rounded-lg border border-dashed border-rule-strong p-6"
     >
       <h2 id="titre-gestion" className="font-display text-xl font-semibold text-ink">
-        Tenir le carnet
+        Mettre à jour le projet
       </h2>
       <p className="mt-1 text-sm text-ink-muted">
         Visible de vous seul. Ajoutez une étape à chaque avancée du travail.

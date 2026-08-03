@@ -22,12 +22,12 @@ export function ProjectForm() {
       )}
 
       <Field
-        label="Titre de l'ouvrage"
+        label="Nom du projet"
         name="title"
         required
         minLength={3}
         maxLength={120}
-        hint="Ce que vous fabriquez, en quelques mots."
+        hint="Ce que vous réalisez, en quelques mots."
         error={errors.title}
       />
 
@@ -49,7 +49,7 @@ export function ProjectForm() {
       />
 
       <SubmitButton pendingLabel="Ouverture…" className="self-start">
-        Ouvrir le carnet
+        Publier le projet
       </SubmitButton>
     </form>
   );

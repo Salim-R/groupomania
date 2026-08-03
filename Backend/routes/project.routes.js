@@ -10,7 +10,7 @@ const { MAX_FILE_SIZE } = require('../lib/upload');
 // écriture sur le disque.
 const upload = multer({ limits: { fileSize: MAX_FILE_SIZE } });
 
-// Lecture publique : un carnet de bord n'a d'intérêt que s'il se consulte
+// Lecture publique des projets et de leurs étapes
 // sans compte.
 router.get('/', projectController.readProjects);
 router.get('/:id', projectController.readOneProject);

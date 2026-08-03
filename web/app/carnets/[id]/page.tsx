@@ -39,11 +39,11 @@ export async function generateMetadata({
   const { id } = await params;
   const project = await loadProject(id);
 
-  if (!project) return { title: 'Carnet introuvable' };
+  if (!project) return { title: 'Projet introuvable' };
 
   return {
     title: project.title,
-    description: project.summary || `Carnet d'atelier de ${project.author.pseudo}.`,
+    description: project.summary || `Projet artisanal de ${project.author.pseudo}.`,
   };
 }
 
@@ -126,7 +126,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
 
         {project.steps.length === 0 ? (
           <p className="mt-4 text-ink-muted">
-            Ce carnet n&apos;a pas encore d&apos;étape. L&apos;atelier vient de l&apos;ouvrir.
+            Ce projet n&apos;a pas encore d&apos;étape. L&apos;atelier vient de le publier.
           </p>
         ) : (
           // Une liste ordonnée : l'ordre porte du sens, ce n'est pas une simple

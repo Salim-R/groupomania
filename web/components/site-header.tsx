@@ -7,7 +7,7 @@ import { Avatar } from '@/components/avatar';
 import { useSession } from '@/components/session-provider';
 
 const links = [
-  { href: '/', label: 'Les carnets' },
+  { href: '/', label: 'Les projets' },
   { href: '/artisans', label: 'Les artisans' },
 ];
 
@@ -51,7 +51,7 @@ export function SiteHeader() {
                 href="/carnets/nouveau"
                 className="rounded-md bg-brass px-3 py-1.5 font-medium text-on-brass transition-colors hover:bg-brass-strong"
               >
-                Ouvrir un carnet
+                Publier un projet
               </Link>
 
               <Link

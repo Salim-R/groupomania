@@ -45,7 +45,7 @@ export async function generateMetadata({
 
   return {
     title: profile.pseudo,
-    description: profile.bio || `Les carnets d'atelier de ${profile.pseudo}.`,
+    description: profile.bio || `Les projets artisanaux de ${profile.pseudo}.`,
   };
 }
 
@@ -56,7 +56,7 @@ export default async function ArtisanPage({ params }: { params: Promise<{ id: st
   if (!profile) notFound();
 
   const stats = [
-    { label: profile._count.projects > 1 ? 'carnets' : 'carnet', value: profile._count.projects },
+    { label: profile._count.projects > 1 ? 'projets' : 'projet', value: profile._count.projects },
     { label: profile._count.followers > 1 ? 'abonnés' : 'abonné', value: profile._count.followers },
     { label: 'abonnements', value: profile._count.following },
   ];
@@ -96,14 +96,14 @@ export default async function ArtisanPage({ params }: { params: Promise<{ id: st
         )}
       </header>
 
-      <section aria-labelledby="titre-carnets" className="mt-8">
-        <h2 id="titre-carnets" className="sr-only">
-          Carnets de {profile.pseudo}
+      <section aria-labelledby="titre-projets" className="mt-8">
+        <h2 id="titre-projets" className="sr-only">
+          Projets de {profile.pseudo}
         </h2>
 
         {profile.projects.length === 0 ? (
           <p className="rounded-lg border border-dashed border-rule-strong px-6 py-12 text-center text-ink-muted">
-            Cet atelier n&apos;a pas encore ouvert de carnet.
+            Cet atelier n&apos;a pas encore publié de projet.
           </p>
         ) : (
           <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
