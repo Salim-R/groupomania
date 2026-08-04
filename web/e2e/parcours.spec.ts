@@ -96,11 +96,16 @@ test.describe("Parcours d'un atelier", () => {
 test('propose la connexion plutôt qu’un bouton mort au visiteur anonyme', async ({ page }) => {
   await page.goto('/');
 
+  // On vise un lien vers un carnet, et non le premier titre de niveau 2 : la
+  // page d'accueil porte aussi des titres de section, et s'appuyer sur leur
+  // ordre rendait ce test dépendant de la mise en page plutôt que du parcours
+  // qu'il vérifie.
+  await page.locator('a[href^="/carnets/"]').first().click();
+  await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+
   // Un visiteur non connecté doit pouvoir atteindre l'invitation au clavier :
   // un bouton désactivé n'est pas focalisable, et l'explication qu'il porterait
   // dans un `title` resterait donc hors de portée.
-  const premierCarnet = page.getByRole('heading', { level: 2 }).first();
-  await premierCarnet.click();
 
   const invitation = page.getByRole('link', { name: /Connectez-vous pour apprécier/ });
 
