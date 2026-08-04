@@ -8,7 +8,7 @@ import { users } from '@/lib/queries';
 
 export const metadata: Metadata = {
   title: 'Les artisans',
-  description: 'Découvrez les ateliers et les projets qu’ils partagent.',
+  description: 'Découvrez les ateliers et les carnets qu’ils partagent.',
 };
 
 async function ArtisanList({ craft, city }: { craft?: string; city?: string }) {
@@ -69,7 +69,7 @@ export default async function ArtisansPage({
     <div className="mx-auto max-w-5xl px-4 py-10">
       <h1 className="font-display text-3xl font-semibold text-ink">Les artisans</h1>
       <p className="mt-2 text-ink-muted">
-        Découvrez leurs projets, leur méthode et les étapes de fabrication.
+        Découvrez leurs carnets, leur méthode et les étapes de fabrication.
       </p>
 
       {/* Formulaire en GET : la recherche reste dans l'URL, donc partageable,

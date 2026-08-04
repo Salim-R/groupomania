@@ -23,7 +23,7 @@ const fraunces = Fraunces({
 
 export const metadata: Metadata = {
   title: {
-    default: "L'Établi · Suivi de projets artisanaux",
+    default: "L'Établi · Carnets d’atelier",
     template: "%s · L'Établi",
   },
   description:
@@ -72,7 +72,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <footer className="border-t border-rule px-4 py-8 text-sm text-ink-muted">
             <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3">
               <p>
-                <span className="font-display font-semibold text-ink">L&apos;Établi</span> · projets
+                <span className="font-display font-semibold text-ink">L&apos;Établi</span> · carnets d’atelier
                 documentés étape par étape
               </p>
               <p>Projet de démonstration, contenus fictifs.</p>

@@ -48,9 +48,9 @@ export async function seConnecter(page: Page, atelier: Atelier) {
 export async function ouvrirCarnet(page: Page, titre: string, resume = 'Carnet de test') {
   await page.goto('/carnets/nouveau');
 
-  await page.getByLabel('Nom du projet').fill(titre);
+  await page.getByLabel('Titre du carnet').fill(titre);
   await page.getByLabel('En deux phrases').fill(resume);
-  await page.getByRole('button', { name: 'Publier le projet' }).click();
+  await page.getByRole('button', { name: 'Ouvrir le carnet' }).click();
 
   await expect(page.getByRole('heading', { level: 1, name: titre })).toBeVisible();
 

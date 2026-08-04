@@ -48,7 +48,7 @@ test.describe('Deux ateliers en parallèle', () => {
       // Bob ne peut pas tenir le carnet d'Alice : le panneau de gestion ne lui
       // est pas proposé. L'API le refuserait de toute façon, ce que vérifient
       // les tests d'autorisation côté serveur.
-      await expect(bob.page.getByRole('heading', { name: 'Mettre à jour le projet' })).toBeHidden();
+      await expect(bob.page.getByRole('heading', { name: 'Mettre à jour le carnet' })).toBeHidden();
 
       // Bob apprécie et commente.
       await bob.page.getByRole('button', { name: /Marquer comme apprécié/ }).click();

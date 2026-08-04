@@ -51,7 +51,7 @@ export function SiteHeader() {
                 href="/carnets/nouveau"
                 className="rounded-md bg-brass px-3 py-1.5 font-medium text-on-brass transition-colors hover:bg-brass-strong"
               >
-                Nouveau projet
+                Nouveau carnet
               </Link>
 
               <Link
@@ -85,7 +85,7 @@ export function SiteHeader() {
                 href="/inscription"
                 className="rounded-md bg-brass px-3 py-1.5 font-medium text-on-brass transition-colors hover:bg-brass-strong"
               >
-                Créer un projet
+                Ouvrir un carnet
               </Link>
             </>
           )}

@@ -27,7 +27,7 @@ async function ProjectGrid() {
         role="status"
         className="rounded-lg border border-rule bg-alert-wash px-4 py-3 text-sm text-ink"
       >
-        Les projets sont momentanément indisponibles. Réessayez dans un instant.
+        Les carnets sont momentanément indisponibles. Réessayez dans un instant.
       </p>
     );
   }
@@ -35,9 +35,9 @@ async function ProjectGrid() {
   if (items.length === 0) {
     return (
       <div className="rounded-lg border border-dashed border-rule-strong px-6 py-16 text-center">
-        <p className="font-display text-xl text-ink">Aucun projet pour l&apos;instant.</p>
+        <p className="font-display text-xl text-ink">Aucun carnet pour l&apos;instant.</p>
         <p className="mt-2 text-ink-muted">
-          Les premiers projets apparaîtront ici dès qu&apos;un atelier publiera son travail.
+          Les premiers carnets apparaîtront ici dès qu&apos;un atelier ouvrira le sien.
         </p>
       </div>
     );
@@ -74,10 +74,10 @@ export default function HomePage() {
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <a
-                href="#projets"
+                href="#carnets"
                 className="rounded-md bg-brass px-5 py-3 font-semibold text-on-brass transition-colors hover:bg-brass-strong"
               >
-                Explorer les projets
+                Explorer les carnets
               </a>
               <a
                 href="/connexion"
@@ -90,10 +90,10 @@ export default function HomePage() {
 
           <aside className="relative overflow-hidden rounded-2xl border border-rule bg-paper p-6 shadow-card sm:p-8">
             <div aria-hidden="true" className="absolute -top-16 -right-12 size-40 rounded-full bg-brass-wash" />
-            <p className="relative text-sm font-semibold text-brass-strong">Un projet, un lien, toute l&apos;histoire</p>
+            <p className="relative text-sm font-semibold text-brass-strong">Un carnet, un lien, toute l&apos;histoire</p>
             <ol className="relative mt-6 space-y-5">
               {[
-                ['01', 'Lancer le projet', 'Un titre, une description et une première photo.'],
+                ['01', 'Ouvrir le carnet', 'Un titre, une description et une première photo.'],
                 ['02', 'Ajouter les étapes', 'Les gestes, les décisions et les images restent dans l’ordre.'],
                 ['03', 'Partager l’avancement', 'Le client ou le public suit le travail depuis une page unique.'],
               ].map(([number, title, text]) => (
@@ -127,7 +127,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section id="projets" className="mx-auto max-w-5xl scroll-mt-24 px-4 pb-14">
+      <section id="carnets" className="mx-auto max-w-5xl scroll-mt-24 px-4 pb-14">
         <div className="mb-8 max-w-2xl">
           <p className="text-sm font-semibold tracking-[0.18em] text-brass uppercase">Dans les ateliers</p>
           <h2 className="mt-3 font-display text-3xl font-semibold text-balance text-ink sm:text-4xl">

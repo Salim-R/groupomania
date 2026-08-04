@@ -39,11 +39,11 @@ export async function generateMetadata({
   const { id } = await params;
   const project = await loadProject(id);
 
-  if (!project) return { title: 'Projet introuvable' };
+  if (!project) return { title: 'Carnet introuvable' };
 
   return {
     title: project.title,
-    description: project.summary || `Projet artisanal de ${project.author.pseudo}.`,
+    description: project.summary || `Carnet d’atelier de ${project.author.pseudo}.`,
   };
 }
 
@@ -136,13 +136,13 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
 
       <section aria-labelledby="titre-etapes" className="mt-12">
         <h2 id="titre-etapes" className="font-display text-2xl font-semibold text-ink">
-          L&apos;avancement du projet
+          L&apos;avancement du carnet
         </h2>
         <p className="mt-2 text-ink-muted">Chaque étape conserve les choix, les gestes et les images de fabrication.</p>
 
         {project.steps.length === 0 ? (
           <p className="mt-4 text-ink-muted">
-            Ce projet n&apos;a pas encore d&apos;étape. L&apos;atelier vient de le publier.
+            Ce carnet n&apos;a pas encore d&apos;étape. L&apos;atelier vient de l&apos;ouvrir.
           </p>
         ) : (
           // Une liste ordonnée : l'ordre porte du sens, ce n'est pas une simple

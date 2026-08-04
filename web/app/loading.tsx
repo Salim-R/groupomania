@@ -13,7 +13,7 @@ export default function Loading() {
     <div className="mx-auto max-w-5xl px-4 py-10">
       <section className="mb-10 max-w-2xl">
         <h1 className="font-display text-4xl leading-tight font-semibold text-balance text-ink sm:text-5xl">
-          Les projets prennent forme, étape par étape
+          Les carnets prennent forme, étape par étape
         </h1>
         <p className="mt-4 text-lg text-pretty text-ink-muted">
           Ébénistes, mécaniciens, céramistes ou luthiers partagent ici l&apos;avancement réel de

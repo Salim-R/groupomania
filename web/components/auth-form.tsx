@@ -60,7 +60,7 @@ export function AuthForm({ mode }: { mode: Mode }) {
           minLength={3}
           maxLength={55}
           defaultValue={state.values?.pseudo}
-          hint="Le nom affiché sur vos projets."
+          hint="Le nom affiché sur vos carnets."
           error={errors.pseudo}
         />
       )}

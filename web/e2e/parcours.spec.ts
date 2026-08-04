@@ -49,7 +49,7 @@ test.describe("Parcours d'un atelier", () => {
     // La destination initiale est mémorisée dans l'URL de connexion, et
     // l'inscription y ramène.
     await page.goto('/carnets/nouveau');
-    await expect(page.getByRole('heading', { level: 1, name: 'Publier un projet' })).toBeVisible();
+    await expect(page.getByRole('heading', { level: 1, name: 'Ouvrir un carnet' })).toBeVisible();
   });
 
   test('la session survit à un rechargement et se ferme à la déconnexion', async ({ page }) => {

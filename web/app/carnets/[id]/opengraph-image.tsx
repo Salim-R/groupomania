@@ -2,7 +2,7 @@ import { ImageResponse } from 'next/og';
 
 import { projects } from '@/lib/queries';
 
-export const alt = "Projet artisanal sur L'Établi";
+export const alt = "Carnet d’atelier sur L'Établi";
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
@@ -34,7 +34,7 @@ export default async function Image({ params }: { params: Promise<{ id: string }
     project = null;
   }
 
-  const title = project?.title ?? 'Projet artisanal';
+  const title = project?.title ?? 'Carnet d’atelier';
   const author = project?.author.pseudo ?? "L'Établi";
   const craft = project?.author.craft ?? null;
   const status = project ? statusLabels[project.status] : null;

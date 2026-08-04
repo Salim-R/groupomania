@@ -45,7 +45,7 @@ export function ProjectCardSkeleton() {
 export function ProjectGridSkeleton({ count = 6 }: { count?: number }) {
   return (
     <div role="status" aria-live="polite" aria-busy="true">
-      <span className="sr-only">Chargement des projets…</span>
+      <span className="sr-only">Chargement des carnets…</span>
 
       <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {Array.from({ length: count }, (_, i) => (
