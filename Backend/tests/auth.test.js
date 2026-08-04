@@ -155,6 +155,41 @@ describe('Audit 1.10 et 2.2 - le cookie de session', () => {
     // qui l'interprète en secondes : les jetons vivaient environ 3000 jours.
     expect(lifetimeDays).toBeCloseTo(3, 5);
   });
+
+  /**
+   * `secure` et `sameSite` sont les deux attributs que l'audit 2.2 reprochait
+   * d'omettre, et ce sont justement les seuls que la suite ne pouvait pas
+   * vérifier : leurs valeurs dépendent de NODE_ENV, qui vaut `test` ici.
+   *
+   * Le module est donc rechargé en se déclarant en production, le temps de
+   * lire les options réellement posées. Sans cela, la correction la plus
+   * exposée du cookie de session resterait la seule à n'être jamais exercée.
+   */
+  it('ajoute secure et sameSite une fois en production', () => {
+    const precedent = process.env.NODE_ENV;
+    process.env.NODE_ENV = 'production';
+
+    let options;
+    jest.isolateModules(() => {
+      const faussesReponses = [];
+      const controleur = require('../controllers/auth.controller');
+      // `cookieOptions` n'est pas exporté : on l'observe à travers l'appel que
+      // le contrôleur fait à `res.cookie` lors d'une déconnexion, qui réutilise
+      // exactement les mêmes options.
+      controleur.logout(
+        {},
+        {
+          clearCookie: (nom, opts) => faussesReponses.push(opts),
+          status: () => ({ json: () => undefined }),
+        }
+      );
+      options = faussesReponses[0];
+    });
+
+    process.env.NODE_ENV = precedent;
+
+    expect(options).toMatchObject({ httpOnly: true, secure: true, sameSite: 'none' });
+  });
 });
 
 describe('Déconnexion', () => {

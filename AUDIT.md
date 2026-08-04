@@ -1,7 +1,9 @@
 # Audit de sécurité et de qualité - état initial
 
 > Audit réalisé le 29 juillet 2026 sur le code d'origine, avant refonte.
-> Ce document sert de référence : chaque point corrigé donnera lieu à un test de non-régression.
+> Ce document sert de référence : chaque point corrigé donne lieu à un test de
+> non-régression, nommé d'après le numéro de la faille. Seul le point 2.3, qui
+> relève de l'hygiène du dépôt et non du comportement de l'API, n'en a pas.
 
 L'API expose un réseau social (publications, commentaires, likes, abonnements). Le principe de sécurité violé partout est le même : **l'identité de l'utilisateur est lue depuis le corps de la requête ou depuis l'URL, jamais depuis le jeton d'authentification.** Un client peut donc se déclarer être qui il veut.
 
@@ -147,4 +149,4 @@ Une seule règle règle la majorité des points ci-dessus :
 
 > **L'identité de l'auteur d'une action provient exclusivement du jeton vérifié, jamais du corps de la requête ni de l'URL.**
 
-Concrètement, `res.locals.user._id` devient la seule source d'identité. Tout champ `posterId`, `commenterId`, `id` ou identifiant d'abonné transmis par le client est ignoré. Chaque opération de modification vérifie ensuite que la ressource visée appartient bien à cet utilisateur.
+Concrètement, `res.locals.user.id` devient la seule source d'identité. Tout champ `posterId`, `commenterId`, `id` ou identifiant d'abonné transmis par le client est ignoré. Chaque opération de modification vérifie ensuite que la ressource visée appartient bien à cet utilisateur.
