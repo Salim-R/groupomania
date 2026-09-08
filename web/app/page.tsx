@@ -111,16 +111,26 @@ export default function HomePage() {
       </section>
 
       <section className="mx-auto max-w-5xl px-4 py-12" aria-labelledby="benefices">
+        <h2 id="benefices" className="sr-only">
+          Ce que L’Établi remplace
+        </h2>
         <div className="grid gap-4 sm:grid-cols-3">
           {[
-            ['Documenter', 'Photos et étapes restent réunies dans le bon ordre.'],
-            ['Rassurer', 'La méthode de travail devient visible avant même le premier échange.'],
-            ['Partager', 'Une seule page remplace les photos dispersées dans les messages.'],
+            [
+              'Le fil de messages',
+              'Trente photos envoyées sur trois semaines, dans le désordre, et introuvables six mois plus tard quand le client rappelle.',
+            ],
+            [
+              'Le « je vous envoie ça »',
+              'Une adresse à donner, une fois. Le client regarde quand il veut, et vous ne renvoyez pas les mêmes photos à chaque question.',
+            ],
+            [
+              'La photo finale seule',
+              'Un meuble terminé ressemble à un meuble acheté. Les étapes montrent le travail que le prix recouvre.',
+            ],
           ].map(([title, text]) => (
             <article key={title} className="rounded-xl border border-rule bg-paper-raised p-5">
-              <h2 id={title === 'Documenter' ? 'benefices' : undefined} className="font-display text-xl font-semibold text-ink">
-                {title}
-              </h2>
+              <h3 className="font-display text-xl font-semibold text-ink">{title}</h3>
               <p className="mt-2 text-sm leading-6 text-ink-muted">{text}</p>
             </article>
           ))}

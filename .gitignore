@@ -35,3 +35,8 @@ npm-debug.log*
 .idea/
 .DS_Store
 Thumbs.db
+
+# Outillage local, jamais versionne
+.claude/
+CLAUDE.md
+AGENTS.md
